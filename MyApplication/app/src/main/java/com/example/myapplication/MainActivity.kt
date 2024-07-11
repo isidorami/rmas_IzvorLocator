@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-enum class Screens() {
+enum class Screens {
     ScreenLogin,
     ScreenSignUp,
     ScreenMap
@@ -33,16 +33,24 @@ fun NavApp(modifier: Modifier = Modifier.fillMaxSize()) {
     NavHost(navController = navController, startDestination = Screens.ScreenLogin.name) {
         composable(Screens.ScreenLogin.name) {
             ScreenLogin(
-                modifier,
-                navigateToSignUp = { navController.navigate(Screens.ScreenSignUp.name)
+                modifier = modifier,
+                navigateToSignUp = {
+                    navController.navigate(Screens.ScreenSignUp.name)
+                },
+                onLogin = { username, password -> { }
                 }
             )
         }
         composable(Screens.ScreenSignUp.name) {
             ScreenSignUp(
-                modifier,
-                navigateToLogin = { navController.popBackStack(Screens.ScreenLogin.name, false)
-                })
+                modifier = modifier,
+                navigateToLogin = {
+                    navController.popBackStack(Screens.ScreenLogin.name, false)
+                },
+                onSignUp = {
+                        username, password, firstName, lastName, phoneNumber -> { }
+                }
+            )
         }
     }
 }

@@ -1,22 +1,19 @@
 package com.example.myapplication.components
 
-import android.net.Uri
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
+import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -26,94 +23,53 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
-import com.example.myapplication.services.TakePhotoService
+import com.example.myapplication.ui.theme.MyApplicationTheme
 
 class SignUpActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-    }
-}
-/*
-class SignUpActivity : ComponentActivity() {
-    companion object {
-        private const val CAMERA_PERMISSION_CODE = 1
-        private const val CAMERA_REQUEST_CODE = 2
-    }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        btn_camera.setOnClickListener{
-            if(ContextCompat.checkSelfPermission(
-                this,
-                    Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED){
-                val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                startActivityForResult(intent, CAMERA_REQUEST_CODE)
-            }
-            else{
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.CAMERA),
-                    CAMERA_PERMISSION_CODE
-                )
-            }
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode == CAMERA_PERMISSION_CODE){
-            if(grantResults.isNotEmpty() && grantResults[0]== PackageManager.PERMISSION_GRANTED){
-                val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                startActivityForResult(intent, CAMERA_REQUEST_CODE)
-            }else{
-                Toast.makeText(
-                    this,
-                    "You just denied permission for camera. Allow it in the settings.",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(resultCode == Activity.RESULT_OK){
-            if(requestCode == CAMERA_REQUEST_CODE){
-                val thumbNail: Bitmap = data!!.extras!!.get("data") as Bitmap
-                iv_image.setImageBitmap(thumbNail)
+        setContent {
+            MyApplicationTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    ScreenSignUp(
+                        navigateToLogin = {
+                            startActivity(Intent(this, LoginActivity::class.java))
+                            finish()
+                        },
+                        onSignUp = {
+                                username, password, firstName, lastName, phoneNumber -> { }
+                        }
+                    )
+                }
             }
         }
     }
 }
- */
+
+//@OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun ScreenSignUp(modifier: Modifier = Modifier.fillMaxSize(), navigateToLogin: () -> Unit/*, onSignUp: (String, String, String, String, String, Uri?) -> Unit*/) {
+fun ScreenSignUp(modifier: Modifier = Modifier.fillMaxSize(), navigateToLogin: () -> Unit, onSignUp: (String, String, String, String, String) -> Unit) {
+
+/*    val cameraPermissionState: PermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
+
+    MainContent(
+        hasPermission = cameraPermissionState.status.isGranted,
+        onRequestPermission = cameraPermissionState::launchPermissionRequest
+    )
+
+ */
+
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
-    val context = LocalContext.current.applicationContext
-    var imageUri by remember { mutableStateOf<Uri>(Uri.EMPTY) }
-
-    val takePhotoLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-        if (success) {
-            Log.e("CAMERA", "Photo captured: $imageUri")
-        }
-    }
-
-    val cameraService = TakePhotoService(context)
-    cameraService.setup(takePhotoLauncher)
 
     Column(
         modifier = modifier.padding(16.dp),
@@ -159,7 +115,7 @@ fun ScreenSignUp(modifier: Modifier = Modifier.fillMaxSize(), navigateToLogin: (
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
         )
 
-        Button(onClick = { cameraService.takePhoto() }) {
+        Button(onClick = {  }) {
             Text(text = "Take a Photo")
         }
 
@@ -173,15 +129,28 @@ fun ScreenSignUp(modifier: Modifier = Modifier.fillMaxSize(), navigateToLogin: (
         TextButton(onClick = navigateToLogin) {
             Text(text = "Already have an account? Log In Here!")
         }
-
-        // Display captured image if available
-        if (imageUri != Uri.EMPTY) {
-            Image(
-                painter = rememberImagePainter(imageUri),
-                contentDescription = null,
-                modifier = Modifier.size(200.dp),
-                contentScale = ContentScale.Crop
-            )
-        }
     }
 }
+/*
+@Composable
+private fun MainContent(
+    hasPermission: Boolean,
+    onRequestPermission: () -> Unit
+) {
+
+    if (hasPermission) {
+        CameraScreen()
+    } else {
+        NoPermissionScreen(onRequestPermission)
+    }
+}
+
+@Preview
+@Composable
+private fun Preview_MainContent() {
+    MainContent(
+        hasPermission = true,
+        onRequestPermission = {}
+    )
+}
+*/
