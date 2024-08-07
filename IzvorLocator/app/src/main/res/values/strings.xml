@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">IzvorLocator</string>
+    <string name="title_activity_login">LoginActivity</string>
+
+    <string name="name">Ime</string>
+    <string name="surname">Prezime</string>
+    <string name="email">Imejl</string>
+    <string name="phone">Telefon</string>
+    <string name="password">Lozinka</string>
+
+    <string name="greeting">Dobrodošao/la!</string>
+    <string name="register_naslov">Registruj novi nalog</string>
+    <string name="login_naslov">Uloguj se na svoj nalog</string>
+    <string name="login">Uloguj se</string>
+    <string name="register">Registruj se</string>
+    <string name="zaborav">Zaboravljena lozinka?</string>
+    <string name="imas">Već imaš svoj nalog?</string>
+    <string name="nemas">Nemaš svoj nalog?</string>
+
+    <string name="greska">Greška!</string>
+    <string name="greska_txt">Pokušaj ponovo kasnije!</string>
+
+
+</resources>

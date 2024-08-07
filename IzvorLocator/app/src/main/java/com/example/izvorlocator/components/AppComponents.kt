@@ -1,0 +1,280 @@
+package com.example.izvorlocator.components
+
+import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.izvorlocator.R
+import com.example.izvorlocator.ui.theme.GrayColor
+import com.example.izvorlocator.ui.theme.Primary
+import com.example.izvorlocator.ui.theme.Secondary
+import com.example.izvorlocator.ui.theme.componentShapes
+
+@Composable
+fun NormalTextComponent(value: String){
+    Text(
+        text = value,
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = 40.dp),
+        style = TextStyle(
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Normal,
+            fontStyle = FontStyle.Normal
+        )
+        //, color = TextColor //radi i jedno i drugo -> ovo je preko theme/color.kt dole je preko color.xml-a
+        , color = colorResource(id = R.color.colorText)
+        , textAlign = TextAlign.Center
+    )
+}
+
+@Composable
+fun HeadingTextComponent(value: String){
+    Text(
+        text = value,
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(),
+        style = TextStyle(
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+            fontStyle = FontStyle.Normal
+        )
+        //, color = TextColor //radi i jedno i drugo -> ovo je preko theme/color.kt dole je preko color.xml-a
+        , color = colorResource(id = R.color.colorText)
+        , textAlign = TextAlign.Center
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TextFieldComponent(
+    labelValue: String,
+    painterResource: Painter,
+    onTextChanged: (String) -> Unit
+)
+{
+    val textValue = remember{ mutableStateOf("") }
+
+    OutlinedTextField(
+        value = textValue.value,
+        onValueChange = {
+            textValue.value = it
+            onTextChanged(it)
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(colorResource(id = R.color.colorBackground))
+            .clip(componentShapes.small)
+        ,
+        label = { Text(text = labelValue) },
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = colorResource(id = R.color.colorPrimary),
+            focusedLabelColor = colorResource(id = R.color.colorPrimary),
+            cursorColor = colorResource(id = R.color.colorPrimary),
+        ),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+        singleLine = true,
+        maxLines = 1,
+        leadingIcon = {
+            Icon(painter = painterResource, contentDescription = "", modifier = Modifier.size(24.dp))
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PasswordTextFieldComponent(
+    labelValue: String,
+    painterResource: Painter,
+    onTextChanged: (String) -> Unit
+){
+    val password = remember{ mutableStateOf("") }
+    val passwordVisible = remember{ mutableStateOf(false) }
+
+    OutlinedTextField(
+        value = password.value,
+        onValueChange = {
+            password.value = it
+            onTextChanged(it)
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(colorResource(id = R.color.colorBackground))
+            .clip(componentShapes.small)
+        ,
+        label = { Text(text = labelValue) },
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = colorResource(id = R.color.colorPrimary),
+            focusedLabelColor = colorResource(id = R.color.colorPrimary),
+            cursorColor = colorResource(id = R.color.colorPrimary),
+        ),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+        singleLine = true,
+        maxLines = 1,
+        leadingIcon = {
+            Icon(painter = painterResource,
+                contentDescription = "",
+                modifier = Modifier.size(26.dp))
+        },
+        trailingIcon = {
+            val iconImage = if(passwordVisible.value){
+                Icon(painter = painterResource(id = R.drawable.visibility),
+                    contentDescription = "Show password",
+                    modifier = Modifier.size(26.dp))
+            }
+            else{
+                Icon(painter = painterResource(id = R.drawable.visibility_off),
+                    contentDescription = "Hide password",
+                    modifier = Modifier.size(26.dp))
+            }
+            IconButton(onClick = { passwordVisible.value = !passwordVisible.value }) {
+                iconImage
+            }
+        },
+        visualTransformation = if(passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation()
+    )
+}
+
+@Composable
+fun ButtonComponent(value: String){
+    Button(onClick = { /*TODO*/ },
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(48.dp),
+        contentPadding = PaddingValues(),
+        colors = ButtonDefaults.buttonColors(Color.Transparent)
+    ) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(48.dp)
+            .background(
+                brush = Brush.horizontalGradient(listOf(Secondary, Primary)),
+                shape = RoundedCornerShape(50.dp)
+            ),
+            contentAlignment = Alignment.Center
+        ){
+            Text(
+                text = value,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold)
+        }
+    }
+}
+
+@Composable
+fun DividerTextComponent(){
+    Row(modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically) {
+        Divider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            color = GrayColor,
+            thickness = 1.dp)
+        /*Text(
+            modifier = Modifier.padding(8.dp),
+            text = "ili",
+            fontSize = 14.sp,
+            color = TextColor)
+        Divider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            color = GrayColor,
+            thickness = 1.dp)
+         */
+    }
+}
+
+@Composable
+fun ClickableLoginTextComponent(question: String, text: String, onTextSelected: (String) -> Unit){
+    val pitanje = question
+    val tekst = text
+    val annotatedString = buildAnnotatedString {
+        append(pitanje)
+        withStyle(style = SpanStyle(color = Primary)){
+            pushStringAnnotation(tag=tekst, annotation = tekst)
+            append(tekst)
+        }
+    }
+    ClickableText(
+        text = annotatedString,
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = 40.dp),
+        style = TextStyle(
+            fontSize = 21.sp,
+            fontWeight = FontWeight.Normal,
+            fontStyle = FontStyle.Normal,
+            textAlign = TextAlign.Center
+        ),
+        onClick = { offset ->
+        annotatedString.getStringAnnotations(offset, offset)
+            .firstOrNull()?.also { span ->
+                Log.d("ClickableTextComponent", "{${span.item}}")
+
+                if(span.item == tekst){
+                    onTextSelected(span.item)
+                }
+            }
+    })
+}
+@Composable
+fun UnderLinedTextComponent(value: String){
+    Text(
+        text = value,
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = 40.dp),
+        style = TextStyle(
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Normal,
+            fontStyle = FontStyle.Normal
+        )
+        , color = colorResource(id = R.color.colorGray)
+        , textAlign = TextAlign.Center
+        , textDecoration = TextDecoration.Underline
+    )
+}
