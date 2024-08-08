@@ -45,33 +45,41 @@ fun SignUpScreen(loginViewModel: LoginViewModel = viewModel()) {
                 painterResource(id = R.drawable.profile),
                 onTextChanged = {
                     loginViewModel.onEvent(UIEvent.FirstnameChanged(it))
-                })
+                },
+                errorStatus = loginViewModel.registrationUIState.value.firstnameError)
             TextFieldComponent(
                 labelValue = stringResource(id = R.string.surname),
                 painterResource(id = R.drawable.profile),
                 onTextChanged = {
                     loginViewModel.onEvent(UIEvent.LastnameChanged(it))
-                })
+                },
+                errorStatus = loginViewModel.registrationUIState.value.lastnameError)
             TextFieldComponent(
                 labelValue = stringResource(id = R.string.email),
                 painterResource(id = R.drawable.email),
                 onTextChanged = {
                     loginViewModel.onEvent(UIEvent.EmailChanged(it))
-                })
+                },
+                errorStatus = loginViewModel.registrationUIState.value.emailError)
             TextFieldComponent(
                 labelValue = stringResource(id = R.string.phone),
                 painterResource(id = R.drawable.phone),
                 onTextChanged = {
                     loginViewModel.onEvent(UIEvent.PhoneChanged(it))
-                })
+                },
+                errorStatus = loginViewModel.registrationUIState.value.phoneError)
             PasswordTextFieldComponent(
                 labelValue = stringResource(id = R.string.password),
                 painterResource(id = R.drawable.lock),
                 onTextChanged = {
                     loginViewModel.onEvent(UIEvent.PasswordChanged(it))
-                })
+                },
+                errorStatus = loginViewModel.registrationUIState.value.passwordError)
             Spacer(modifier = Modifier.height(40.dp))
-            ButtonComponent(value = stringResource(id = R.string.register))
+            ButtonComponent(value = stringResource(id = R.string.register),
+                onButtonClicked = {
+                    loginViewModel.onEvent(UIEvent.RegisterButtonClicked)
+                })
             Spacer(modifier = Modifier.height(30.dp))
             DividerTextComponent()
             Spacer(modifier = Modifier.height(20.dp))

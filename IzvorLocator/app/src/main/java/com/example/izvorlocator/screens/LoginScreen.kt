@@ -55,7 +55,10 @@ fun LoginScreen(){
             Spacer(modifier = Modifier.height(10.dp))
             UnderLinedTextComponent(value = stringResource(id = R.string.zaborav))
             Spacer(modifier = Modifier.height(70.dp))
-            ButtonComponent(value = stringResource(id = R.string.login))
+            ButtonComponent(value = stringResource(id = R.string.login),
+                onButtonClicked = {
+
+                })
             Spacer(modifier = Modifier.height(30.dp))
             DividerTextComponent()
             Spacer(modifier = Modifier.height(20.dp))

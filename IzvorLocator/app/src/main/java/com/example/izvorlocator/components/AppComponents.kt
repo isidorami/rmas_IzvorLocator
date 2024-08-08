@@ -92,7 +92,8 @@ fun HeadingTextComponent(value: String){
 fun TextFieldComponent(
     labelValue: String,
     painterResource: Painter,
-    onTextChanged: (String) -> Unit
+    onTextChanged: (String) -> Unit,
+    errorStatus: Boolean = false
 )
 {
     val textValue = remember{ mutableStateOf("") }
@@ -119,7 +120,8 @@ fun TextFieldComponent(
         maxLines = 1,
         leadingIcon = {
             Icon(painter = painterResource, contentDescription = "", modifier = Modifier.size(24.dp))
-        }
+        },
+        isError = !errorStatus
     )
 }
 
@@ -128,7 +130,8 @@ fun TextFieldComponent(
 fun PasswordTextFieldComponent(
     labelValue: String,
     painterResource: Painter,
-    onTextChanged: (String) -> Unit
+    onTextChanged: (String) -> Unit,
+    errorStatus: Boolean = false
 ){
     val password = remember{ mutableStateOf("") }
     val passwordVisible = remember{ mutableStateOf(false) }
@@ -173,13 +176,16 @@ fun PasswordTextFieldComponent(
                 iconImage
             }
         },
-        visualTransformation = if(passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation()
+        visualTransformation = if(passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
+        isError = !errorStatus
     )
 }
 
 @Composable
-fun ButtonComponent(value: String){
-    Button(onClick = { /*TODO*/ },
+fun ButtonComponent(value: String, onButtonClicked: () -> Unit){
+    Button(onClick = {
+        onButtonClicked.invoke()
+    },
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(48.dp),
