@@ -14,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.izvorlocator.R
 import com.example.izvorlocator.app.AppRouter
 import com.example.izvorlocator.app.Screen
@@ -25,9 +26,12 @@ import com.example.izvorlocator.components.NormalTextComponent
 import com.example.izvorlocator.components.PasswordTextFieldComponent
 import com.example.izvorlocator.components.TextFieldComponent
 import com.example.izvorlocator.components.UnderLinedTextComponent
+import com.example.izvorlocator.data.LoginUIEvent
+import com.example.izvorlocator.data.LoginUIState
+import com.example.izvorlocator.data.LoginViewModel
 
 @Composable
-fun LoginScreen(){
+fun LoginScreen(loginViewModel: LoginViewModel = viewModel()){
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -42,23 +46,27 @@ fun LoginScreen(){
                 labelValue = stringResource(id = R.string.email),
                 painterResource(id = R.drawable.email),
                 onTextChanged = {
-
-                }
+                    loginViewModel.onEvent(LoginUIEvent.EmailChanged(it))
+                },
+                errorStatus = loginViewModel.loginUIState.value.emailError
             )
             PasswordTextFieldComponent(
                 labelValue = stringResource(id = R.string.password),
                 painterResource(id = R.drawable.lock),
                 onTextChanged = {
-
-                }
+                    loginViewModel.onEvent(LoginUIEvent.PasswordChanged(it))
+                },
+                errorStatus = loginViewModel.loginUIState.value.passwordError
             )
             Spacer(modifier = Modifier.height(10.dp))
             UnderLinedTextComponent(value = stringResource(id = R.string.zaborav))
             Spacer(modifier = Modifier.height(70.dp))
             ButtonComponent(value = stringResource(id = R.string.login),
                 onButtonClicked = {
-
-                })
+                    loginViewModel.onEvent(LoginUIEvent.LoginButtonClicked)
+                },
+                isEnabled = loginViewModel.allValidationsPassed.value
+            )
             Spacer(modifier = Modifier.height(30.dp))
             DividerTextComponent()
             Spacer(modifier = Modifier.height(20.dp))
@@ -66,7 +74,7 @@ fun LoginScreen(){
                 question = stringResource(id = R.string.nemas)+" "
                 , text = stringResource(id = R.string.register)+"!"
                 , onTextSelected = {
-                    AppRouter.navigateTo(Screen.SignUpScreen)
+                    AppRouter.navigateTo(Screen.RegisterScreen)
                 })
         }
     }

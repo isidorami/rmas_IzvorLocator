@@ -1,6 +1,6 @@
 package com.example.izvorlocator.data
 
-data class RegistrationUIState(
+data class RegisterUIState(
     var firstname : String = "",
     var lastname : String = "",
     var email : String = "",

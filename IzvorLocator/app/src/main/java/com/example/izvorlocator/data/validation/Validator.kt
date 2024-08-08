@@ -1,6 +1,9 @@
 package com.example.izvorlocator.data.validation
 
 object Validator {
+    private val emailRegex = Regex("^[A-Za-z0-9+_.-]+@(.+)$")
+    private val phoneRegex = Regex("^[+]?[0-9]{10,13}\$")
+
     fun validateFirstname(firstname: String): ValidationResult{
         return ValidationResult(
             (firstname.isNotEmpty() && firstname.length>=2)
@@ -13,12 +16,12 @@ object Validator {
     }
     fun validateEmail(email: String): ValidationResult{
         return ValidationResult(
-            (email.isNotEmpty())
+            (email.isNotEmpty() && email.matches(emailRegex))
         )
     }
     fun validatePhone(phone: String): ValidationResult{
         return ValidationResult(
-            (phone.isNotEmpty())
+            (phone.isNotEmpty() && phone.matches(phoneRegex))
         )
     }
     fun validatePassword(password: String): ValidationResult{

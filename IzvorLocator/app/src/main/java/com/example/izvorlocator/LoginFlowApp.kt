@@ -1,4 +1,4 @@
-package com.example.izvorlocator.data
+package com.example.izvorlocator
 
 import android.app.Application
 import com.google.firebase.FirebaseApp

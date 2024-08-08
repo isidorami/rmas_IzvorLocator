@@ -3,95 +3,75 @@ package com.example.izvorlocator.data
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.izvorlocator.app.AppRouter
+import com.example.izvorlocator.app.Screen
 import com.example.izvorlocator.data.validation.Validator
 import com.google.firebase.auth.FirebaseAuth
 
-class LoginViewModel : ViewModel(){
-
+class LoginViewModel: ViewModel() {
     var TAG = LoginViewModel::class.simpleName
 
-    var registrationUIState = mutableStateOf(RegistrationUIState())
+    var loginUIState = mutableStateOf(LoginUIState())
 
-    fun onEvent(event: UIEvent){
+    var allValidationsPassed = mutableStateOf(false)
+
+    fun onEvent(event: LoginUIEvent){
 
         when(event){
-            is UIEvent.FirstnameChanged -> {
-                registrationUIState.value = registrationUIState.value.copy(
-                    firstname = event.firstname
-                )
-                val firstnameResult = Validator.validateFirstname(registrationUIState.value.firstname)
-                registrationUIState.value = registrationUIState.value.copy(
-                    firstnameError = firstnameResult.status)
-            }
-            is UIEvent.LastnameChanged -> {
-                registrationUIState.value = registrationUIState.value.copy(
-                    lastname = event.lastname
-                )
-                val lastnameResult = Validator.validateLastname(registrationUIState.value.lastname)
-                registrationUIState.value = registrationUIState.value.copy(
-                    lastnameError = lastnameResult.status)
-            }
-            is UIEvent.EmailChanged -> {
-                registrationUIState.value = registrationUIState.value.copy(
+            is LoginUIEvent.EmailChanged -> {
+                loginUIState.value = loginUIState.value.copy(
                     email = event.email
                 )
-                val emailResult = Validator.validateEmail(registrationUIState.value.email)
-                registrationUIState.value = registrationUIState.value.copy(
+                val emailResult = Validator.validateEmail(loginUIState.value.email)
+                loginUIState.value = loginUIState.value.copy(
                     emailError = emailResult.status
                 )
             }
-            is UIEvent.PhoneChanged -> {
-                registrationUIState.value = registrationUIState.value.copy(
-                    phone = event.phone
-                )
-                val phoneResult = Validator.validatePhone(registrationUIState.value.phone)
-                registrationUIState.value = registrationUIState.value.copy(
-                    phoneError = phoneResult.status
-                )
-            }
-            is UIEvent.PasswordChanged -> {
-                registrationUIState.value = registrationUIState.value.copy(
+            is LoginUIEvent.PasswordChanged -> {
+                loginUIState.value = loginUIState.value.copy(
                     password = event.password
                 )
-                val passwordResult = Validator.validatePassword(registrationUIState.value.password)
-                registrationUIState.value = registrationUIState.value.copy(
+                val passwordResult = Validator.validatePassword(loginUIState.value.password)
+                loginUIState.value = loginUIState.value.copy(
                     passwordError = passwordResult.status
                 )
             }
-            is UIEvent.RegisterButtonClicked -> {
-                signUp()
+            is LoginUIEvent.LoginButtonClicked -> {
+                login()
             }
         }
+        allValidationsPassed.value = validateAll()
     }
 
-    private fun signUp(){
+    private fun login(){
         if(validateAll()){
-            createUserInFirebase(
-                email = registrationUIState.value.email,
-                password = registrationUIState.value.password
-                    )
+            loginUserWithFirebase(
+                email = loginUIState.value.email,
+                password = loginUIState.value.password
+            )
         }
     }
-    private fun validateAll(): Boolean {
-        val pom = registrationUIState.value
-        return (pom.firstnameError && pom.lastnameError
-            && pom.emailError && pom.phoneError && pom.passwordError)
-    }
-    private fun print() {
-        Log.d(TAG, "Printanje register")
-        Log.d(TAG, registrationUIState.value.toString())
-    }
-
-    private fun createUserInFirebase(email:String, password: String){
+    private fun loginUserWithFirebase(email:String, password: String){
         FirebaseAuth.getInstance()
-            .createUserWithEmailAndPassword(email, password)
+            .signInWithEmailAndPassword(email, password)
             .addOnCompleteListener{
                 Log.d(TAG,"IN COMPLETE LISTENER")
                 Log.d(TAG,"${it.isSuccessful}")
+                if(it.isSuccessful){
+                    AppRouter.navigateTo(Screen.MapScreen)
+                }
             }
             .addOnFailureListener{
                 Log.d(TAG,"IN FAILURE LISTENER")
                 Log.d(TAG,"${it.message}")
             }
+    }
+    private fun validateAll(): Boolean {
+        val pom = loginUIState.value
+        return (pom.emailError && pom.passwordError)
+    }
+    private fun print() {
+        Log.d(TAG, "Printanje login")
+        Log.d(TAG, loginUIState.value.toString())
     }
 }
