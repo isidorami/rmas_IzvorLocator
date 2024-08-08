@@ -9,7 +9,7 @@ import com.example.izvorlocator.data.validation.Validator
 import com.google.firebase.auth.FirebaseAuth
 
 class ForgotViewModel : ViewModel() {
-    var TAG = ForgotViewModel::class.simpleName
+    private var tag = ForgotViewModel::class.simpleName
 
     var forgotUIState = mutableStateOf(ForgotUIState())
 
@@ -27,7 +27,6 @@ class ForgotViewModel : ViewModel() {
                 )
             }
             is ForgotUIEvent.ForgotButtonClicked -> {
-                Log.d(TAG, "USLI U FORGOT BUTTON CLICKED")
                 if(forgotUIState.value.emailError){
                     forgotPassword()
                 }
@@ -35,18 +34,18 @@ class ForgotViewModel : ViewModel() {
         }
         allValidationsPassed = mutableStateOf(forgotUIState.value.emailError)
     }
-    fun forgotPassword(){
+    private fun forgotPassword(){
         val email = forgotUIState.value.email
         FirebaseAuth.getInstance()
             .sendPasswordResetEmail(email)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d(TAG, "Email sent.")
+                    Log.d(tag, "Email sent.")
                     AppRouter.navigateTo(Screen.LoginScreen)
                 }
             }
             .addOnFailureListener{
-                Log.d(TAG, "In failure listener")
+                Log.d(tag, "In failure listener")
             }
     }
 }

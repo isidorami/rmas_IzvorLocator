@@ -64,7 +64,6 @@ fun NormalTextComponent(value: String){
             fontWeight = FontWeight.Normal,
             fontStyle = FontStyle.Normal
         )
-        //, color = TextColor //radi i jedno i drugo -> ovo je preko theme/color.kt dole je preko color.xml-a
         , color = colorResource(id = R.color.colorText)
         , textAlign = TextAlign.Center
     )
@@ -82,7 +81,6 @@ fun HeadingTextComponent(value: String){
             fontWeight = FontWeight.Bold,
             fontStyle = FontStyle.Normal
         )
-        //, color = TextColor //radi i jedno i drugo -> ovo je preko theme/color.kt dole je preko color.xml-a
         , color = colorResource(id = R.color.colorText)
         , textAlign = TextAlign.Center
     )
@@ -242,13 +240,11 @@ fun DividerTextComponent(){
 
 @Composable
 fun ClickableLoginTextComponent(question: String, text: String, onTextSelected: (String) -> Unit){
-    val pitanje = question
-    val tekst = text
     val annotatedString = buildAnnotatedString {
-        append(pitanje)
+        append(question)
         withStyle(style = SpanStyle(color = Primary)){
-            pushStringAnnotation(tag=tekst, annotation = tekst)
-            append(tekst)
+            pushStringAnnotation(tag = text, annotation = text)
+            append(text)
         }
     }
     ClickableText(
@@ -267,7 +263,7 @@ fun ClickableLoginTextComponent(question: String, text: String, onTextSelected: 
             .firstOrNull()?.also { span ->
                 Log.d("ClickableTextComponent", "{${span.item}}")
 
-                if(span.item == tekst){
+                if (span.item == text) {
                     onTextSelected(span.item)
                 }
             }

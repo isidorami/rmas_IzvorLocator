@@ -9,9 +9,11 @@
     <string name="password">Lozinka</string>
 
     <string name="greeting">Dobrodošao/la!</string>
+
     <string name="register_naslov">Registruj novi nalog</string>
     <string name="login_naslov">Uloguj se na svoj nalog</string>
     <string name="forgot_password_naslov">Resetuj lozinku svog naloga</string>
+
     <string name="login">Uloguj se</string>
     <string name="register">Registruj se</string>
     <string name="forgot">Resetuj lozinku</string>
@@ -21,6 +23,5 @@
 
     <string name="greska">Greška!</string>
     <string name="greska_txt">Pokušaj ponovo kasnije!</string>
-
 
 </resources>

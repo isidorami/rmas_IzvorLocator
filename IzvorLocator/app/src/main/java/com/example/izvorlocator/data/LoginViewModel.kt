@@ -9,7 +9,7 @@ import com.example.izvorlocator.data.validation.Validator
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginViewModel: ViewModel() {
-    var TAG = LoginViewModel::class.simpleName
+    private var tag = LoginViewModel::class.simpleName
 
     var loginUIState = mutableStateOf(LoginUIState())
 
@@ -55,33 +55,19 @@ class LoginViewModel: ViewModel() {
         FirebaseAuth.getInstance()
             .signInWithEmailAndPassword(email, password)
             .addOnCompleteListener{
-                Log.d(TAG,"IN COMPLETE LISTENER")
-                Log.d(TAG,"${it.isSuccessful}")
+                Log.d(tag,"IN COMPLETE LISTENER")
+                Log.d(tag,"${it.isSuccessful}")
                 if(it.isSuccessful){
                     AppRouter.navigateTo(Screen.MapScreen)
                 }
             }
             .addOnFailureListener{
-                Log.d(TAG,"IN FAILURE LISTENER")
-                Log.d(TAG,"${it.message}")
+                Log.d(tag,"IN FAILURE LISTENER")
+                Log.d(tag,"${it.message}")
             }
     }
     private fun validateAll(): Boolean {
         val pom = loginUIState.value
         return (pom.emailError && pom.passwordError)
-    }
-    fun forgotPassword(){
-        val email = loginUIState.value.email
-        FirebaseAuth.getInstance()
-            .sendPasswordResetEmail(email)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d(TAG, "Email sent.")
-                    AppRouter.navigateTo(Screen.LoginScreen)
-                }
-            }
-            .addOnFailureListener{
-                Log.d(TAG, "In failure listener")
-            }
     }
 }

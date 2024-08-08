@@ -2,7 +2,9 @@ package com.example.izvorlocator.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -24,11 +26,20 @@ fun MapScreen(registerViewModel: RegisterViewModel = viewModel()){
             .padding(28.dp)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
-            HeadingTextComponent(value = "MAPA - TO BE DONE")
+            HeadingTextComponent(value = "MAP - TO BE DONE")
+
+            Spacer(modifier = Modifier.height(40.dp))
 
             ButtonComponent(
                 value = "Izloguj se",
                 onButtonClicked = { registerViewModel.logout() },
+                isEnabled = true
+            )
+            Spacer(modifier = Modifier.height(40.dp))
+
+            ButtonComponent(
+                value = "Obriši nalog",
+                onButtonClicked = { registerViewModel.deleteAccount() },
                 isEnabled = true
             )
         }

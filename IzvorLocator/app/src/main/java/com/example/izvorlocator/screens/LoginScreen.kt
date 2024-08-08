@@ -26,14 +26,11 @@ import com.example.izvorlocator.components.NormalTextComponent
 import com.example.izvorlocator.components.PasswordTextFieldComponent
 import com.example.izvorlocator.components.TextFieldComponent
 import com.example.izvorlocator.components.UnderlinedTextComponent
-import com.example.izvorlocator.data.ForgotUIEvent
-import com.example.izvorlocator.data.ForgotViewModel
 import com.example.izvorlocator.data.LoginUIEvent
 import com.example.izvorlocator.data.LoginViewModel
 
 @Composable
-fun LoginScreen(loginViewModel: LoginViewModel = viewModel(),
-                forgotViewModel: ForgotViewModel = viewModel()){
+fun LoginScreen(loginViewModel: LoginViewModel = viewModel()){
     Surface(
         modifier = Modifier
             .fillMaxSize()

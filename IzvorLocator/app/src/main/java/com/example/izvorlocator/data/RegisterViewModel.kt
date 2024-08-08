@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 
 class RegisterViewModel : ViewModel(){
 
-    var TAG = RegisterViewModel::class.simpleName
+    private var tag = RegisterViewModel::class.simpleName
 
     var registerUIState = mutableStateOf(RegisterUIState())
 
@@ -89,15 +89,15 @@ class RegisterViewModel : ViewModel(){
         FirebaseAuth.getInstance()
             .createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener{
-                Log.d(TAG,"IN COMPLETE LISTENER")
-                Log.d(TAG,"${it.isSuccessful}")
+                Log.d(tag,"IN COMPLETE LISTENER")
+                Log.d(tag,"${it.isSuccessful}")
                 if(it.isSuccessful){
                     AppRouter.navigateTo(Screen.MapScreen)
                 }
             }
             .addOnFailureListener{
-                Log.d(TAG,"IN FAILURE LISTENER")
-                Log.d(TAG,"${it.message}")
+                Log.d(tag,"IN FAILURE LISTENER")
+                Log.d(tag,"${it.message}")
             }
     }
 
@@ -106,10 +106,29 @@ class RegisterViewModel : ViewModel(){
         firebaseAuth.signOut()
         val authStateListener = AuthStateListener{
             if(it.currentUser == null){
-                Log.d(TAG, "Inside Logout")
+                Log.d(tag, "Inside Logout")
                 AppRouter.navigateTo(Screen.LoginScreen)
             }
         }
         firebaseAuth.addAuthStateListener(authStateListener)
+    }
+
+    fun deleteAccount() {
+        val firebaseAuth = FirebaseAuth.getInstance()
+        val currentUser = firebaseAuth.currentUser
+
+        currentUser?.let { user ->
+            user.delete()
+                .addOnCompleteListener { deleteTask ->
+                    if (deleteTask.isSuccessful) {
+                        Log.d(tag, "User account deleted.")
+                        AppRouter.navigateTo(Screen.LoginScreen)
+                    } else {
+                        Log.e(tag, "Account deletion failed.")
+                    }
+                }
+        } ?: run {
+            Log.e(tag, "No user is currently signed in.")
+        }
     }
 }

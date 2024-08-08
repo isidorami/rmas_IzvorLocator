@@ -1,11 +1,8 @@
 package com.example.izvorlocator
 
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.example.izvorlocator.app.AppRouter
 import com.example.izvorlocator.app.IzvorLocatorApp
 
 class MainActivity : ComponentActivity() {
@@ -48,6 +45,5 @@ class MainActivity : ComponentActivity() {
         super.onRestart()
         Toast.makeText(this, "onRestart", Toast.LENGTH_SHORT).show()
     }
-
      */
 }
