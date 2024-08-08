@@ -25,13 +25,15 @@ import com.example.izvorlocator.components.HeadingTextComponent
 import com.example.izvorlocator.components.NormalTextComponent
 import com.example.izvorlocator.components.PasswordTextFieldComponent
 import com.example.izvorlocator.components.TextFieldComponent
-import com.example.izvorlocator.components.UnderLinedTextComponent
+import com.example.izvorlocator.components.UnderlinedTextComponent
+import com.example.izvorlocator.data.ForgotUIEvent
+import com.example.izvorlocator.data.ForgotViewModel
 import com.example.izvorlocator.data.LoginUIEvent
-import com.example.izvorlocator.data.LoginUIState
 import com.example.izvorlocator.data.LoginViewModel
 
 @Composable
-fun LoginScreen(loginViewModel: LoginViewModel = viewModel()){
+fun LoginScreen(loginViewModel: LoginViewModel = viewModel(),
+                forgotViewModel: ForgotViewModel = viewModel()){
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -59,7 +61,11 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()){
                 errorStatus = loginViewModel.loginUIState.value.passwordError
             )
             Spacer(modifier = Modifier.height(10.dp))
-            UnderLinedTextComponent(value = stringResource(id = R.string.zaborav))
+            UnderlinedTextComponent(
+                value = stringResource(id = R.string.zaborav),
+                onUnderlinedTextClicked = {
+                    AppRouter.navigateTo(Screen.ForgotPasswordScreen)
+                })
             Spacer(modifier = Modifier.height(70.dp))
             ButtonComponent(value = stringResource(id = R.string.login),
                 onButtonClicked = {

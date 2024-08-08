@@ -2,6 +2,7 @@ package com.example.izvorlocator.components
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -273,12 +274,16 @@ fun ClickableLoginTextComponent(question: String, text: String, onTextSelected: 
     })
 }
 @Composable
-fun UnderLinedTextComponent(value: String){
+fun UnderlinedTextComponent(value: String, onUnderlinedTextClicked: () -> Unit){
     Text(
         text = value,
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 40.dp),
+            .heightIn(min = 40.dp)
+            .clickable(
+                onClick = {
+                onUnderlinedTextClicked.invoke()
+            }),
         style = TextStyle(
             fontSize = 18.sp,
             fontWeight = FontWeight.Normal,

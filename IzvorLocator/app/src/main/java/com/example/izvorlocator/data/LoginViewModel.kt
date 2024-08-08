@@ -44,7 +44,7 @@ class LoginViewModel: ViewModel() {
     }
 
     private fun login(){
-        if(validateAll()){
+        if(allValidationsPassed.value){
             loginUserWithFirebase(
                 email = loginUIState.value.email,
                 password = loginUIState.value.password
@@ -70,8 +70,18 @@ class LoginViewModel: ViewModel() {
         val pom = loginUIState.value
         return (pom.emailError && pom.passwordError)
     }
-    private fun print() {
-        Log.d(TAG, "Printanje login")
-        Log.d(TAG, loginUIState.value.toString())
+    fun forgotPassword(){
+        val email = loginUIState.value.email
+        FirebaseAuth.getInstance()
+            .sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d(TAG, "Email sent.")
+                    AppRouter.navigateTo(Screen.LoginScreen)
+                }
+            }
+            .addOnFailureListener{
+                Log.d(TAG, "In failure listener")
+            }
     }
 }

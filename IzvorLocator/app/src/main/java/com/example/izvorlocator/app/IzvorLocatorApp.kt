@@ -6,6 +6,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.example.izvorlocator.screens.ForgotPasswordScreen
 import com.example.izvorlocator.screens.LoginScreen
 import com.example.izvorlocator.screens.MapScreen
 import com.example.izvorlocator.screens.RegisterScreen
@@ -27,7 +28,13 @@ fun IzvorLocatorApp(){
                 is Screen.MapScreen -> {
                     MapScreen()
                 }
+                is Screen.ForgotPasswordScreen -> {
+                    ForgotPasswordScreen()
+                }
             }
+        }
+        BackHandler {
+            AppRouter.popBackStack()
         }
     }
 }

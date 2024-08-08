@@ -11,8 +11,10 @@
     <string name="greeting">Dobrodošao/la!</string>
     <string name="register_naslov">Registruj novi nalog</string>
     <string name="login_naslov">Uloguj se na svoj nalog</string>
+    <string name="forgot_password_naslov">Resetuj lozinku svog naloga</string>
     <string name="login">Uloguj se</string>
     <string name="register">Registruj se</string>
+    <string name="forgot">Resetuj lozinku</string>
     <string name="zaborav">Zaboravljena lozinka?</string>
     <string name="imas">Već imaš svoj nalog?</string>
     <string name="nemas">Nemaš svoj nalog?</string>

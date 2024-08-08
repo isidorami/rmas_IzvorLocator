@@ -9,6 +9,7 @@ import com.example.izvorlocator.data.validation.Validator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 
+
 class RegisterViewModel : ViewModel(){
 
     var TAG = RegisterViewModel::class.simpleName
@@ -71,7 +72,7 @@ class RegisterViewModel : ViewModel(){
     }
 
     private fun register(){
-        if(validateAll()){
+        if(allValidationsPassed.value){
             createUserInFirebase(
                 email = registerUIState.value.email,
                 password = registerUIState.value.password
@@ -82,10 +83,6 @@ class RegisterViewModel : ViewModel(){
         val pom = registerUIState.value
         return (pom.firstnameError && pom.lastnameError
             && pom.emailError && pom.phoneError && pom.passwordError)
-    }
-    private fun print() {
-        Log.d(TAG, "Printanje register")
-        Log.d(TAG, registerUIState.value.toString())
     }
 
     private fun createUserInFirebase(email:String, password: String){
