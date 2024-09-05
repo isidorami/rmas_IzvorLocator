@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.example.izvorlocator.components.NormalTextComponent
 
 @Composable
-fun MapScreen() {
+fun RangScreen() {
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -21,13 +21,13 @@ fun MapScreen() {
             .padding(28.dp)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
-            NormalTextComponent(value = "MAPA")
+            NormalTextComponent(value = "RANG")
         }
     }
 }
 
 @Preview
 @Composable
-fun DefaultPreviewOfMapScreen(){
-    MapScreen()
+fun DefaultPreviewOfRangScreen(){
+    RangScreen()
 }

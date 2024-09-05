@@ -13,6 +13,8 @@ sealed class Screen {
     object LoginScreen : Screen()
     object ForgotPasswordScreen : Screen()
     object MapScreen : Screen()
+    object RangScreen : Screen()
+    object ListScreen : Screen()
 }
 
 object AppRouter{
@@ -29,9 +31,16 @@ object AppRouter{
             screenStack.removeAt(screenStack.size - 1)
             currentScreen.value = screenStack.last()
         }
+        else{
+            System.exit(0);
+        }
+    }
+    fun emptyStack() {
+        while(screenStack.size > 1) {
+            screenStack.removeAt(screenStack.size - 1)
+        }
     }
 }
-
 
 @Composable
 fun BackHandler(enabled: Boolean = true, onBack: () -> Unit) {

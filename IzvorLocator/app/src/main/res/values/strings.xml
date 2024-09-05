@@ -23,5 +23,9 @@
 
     <string name="greska">Greška!</string>
     <string name="greska_txt">Pokušaj ponovo kasnije!</string>
+    <string name="home">home</string>
+    <string name="rangiranje_korisnika">Rangiranje korisnika</string>
+    <string name="lista_izvora">Lista izvora</string>
+    <string name="mapa">Mapa</string>
 
 </resources>

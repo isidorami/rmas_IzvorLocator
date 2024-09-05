@@ -107,6 +107,7 @@ class RegisterViewModel : ViewModel(){
         val authStateListener = AuthStateListener{
             if(it.currentUser == null){
                 Log.d(tag, "Inside Logout")
+                AppRouter.emptyStack()
                 AppRouter.navigateTo(Screen.LoginScreen)
             }
         }

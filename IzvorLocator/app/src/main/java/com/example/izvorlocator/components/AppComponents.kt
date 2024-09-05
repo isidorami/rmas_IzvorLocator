@@ -8,10 +8,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
@@ -21,6 +25,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -278,8 +284,8 @@ fun UnderlinedTextComponent(value: String, onUnderlinedTextClicked: () -> Unit){
             .heightIn(min = 40.dp)
             .clickable(
                 onClick = {
-                onUnderlinedTextClicked.invoke()
-            }),
+                    onUnderlinedTextClicked.invoke()
+                }),
         style = TextStyle(
             fontSize = 18.sp,
             fontWeight = FontWeight.Normal,
@@ -289,4 +295,30 @@ fun UnderlinedTextComponent(value: String, onUnderlinedTextClicked: () -> Unit){
         , textAlign = TextAlign.Center
         , textDecoration = TextDecoration.Underline
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AppToolBar(toolbarTitle: String, burgerButtonClicked : ()->Unit, logoutButtonClicked : ()->Unit){
+    TopAppBar(
+        title = {
+            Text(text = toolbarTitle, color = Color.White)
+        },
+        navigationIcon = {
+            IconButton(onClick = {
+                burgerButtonClicked.invoke()
+            }) {
+                Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu", tint = Color.White, modifier = Modifier.padding(start = 10.dp))
+            }
+        },
+        actions = {
+            IconButton(onClick = {
+                logoutButtonClicked.invoke()
+            }) {
+                Icon(imageVector = Icons.Default.ExitToApp, contentDescription = "Logout", tint = Color.White, modifier = Modifier.padding(end = 10.dp))
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Secondary  // Pozadinska boja
+        ))
 }
