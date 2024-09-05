@@ -25,8 +25,8 @@ import com.example.izvorlocator.components.HeadingTextComponent
 import com.example.izvorlocator.components.NormalTextComponent
 import com.example.izvorlocator.components.PasswordTextFieldComponent
 import com.example.izvorlocator.components.TextFieldComponent
-import com.example.izvorlocator.data.RegisterUIEvent
-import com.example.izvorlocator.data.RegisterViewModel
+import com.example.izvorlocator.data.register.RegisterUIEvent
+import com.example.izvorlocator.data.register.RegisterViewModel
 
 @Composable
 fun RegisterScreen(registerViewModel: RegisterViewModel = viewModel()) {

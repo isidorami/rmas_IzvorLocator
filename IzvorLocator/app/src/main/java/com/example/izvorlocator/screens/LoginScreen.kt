@@ -26,8 +26,8 @@ import com.example.izvorlocator.components.NormalTextComponent
 import com.example.izvorlocator.components.PasswordTextFieldComponent
 import com.example.izvorlocator.components.TextFieldComponent
 import com.example.izvorlocator.components.UnderlinedTextComponent
-import com.example.izvorlocator.data.LoginUIEvent
-import com.example.izvorlocator.data.LoginViewModel
+import com.example.izvorlocator.data.login.LoginUIEvent
+import com.example.izvorlocator.data.login.LoginViewModel
 
 @Composable
 fun LoginScreen(loginViewModel: LoginViewModel = viewModel()){

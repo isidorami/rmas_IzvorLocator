@@ -1,4 +1,4 @@
-package com.example.izvorlocator.data
+package com.example.izvorlocator.data.forgot
 
 data class ForgotUIState (
         var email : String = "",

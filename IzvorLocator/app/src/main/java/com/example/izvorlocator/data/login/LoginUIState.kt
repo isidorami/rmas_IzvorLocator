@@ -1,4 +1,4 @@
-package com.example.izvorlocator.data
+package com.example.izvorlocator.data.login
 
 data class LoginUIState (
     var email : String = "",

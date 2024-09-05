@@ -20,8 +20,8 @@ import com.example.izvorlocator.components.ButtonComponent
 import com.example.izvorlocator.components.HeadingTextComponent
 import com.example.izvorlocator.components.NormalTextComponent
 import com.example.izvorlocator.components.TextFieldComponent
-import com.example.izvorlocator.data.ForgotUIEvent
-import com.example.izvorlocator.data.ForgotViewModel
+import com.example.izvorlocator.data.forgot.ForgotUIEvent
+import com.example.izvorlocator.data.forgot.ForgotViewModel
 
 @Composable
 fun ForgotPasswordScreen(forgotViewModel: ForgotViewModel = viewModel()){

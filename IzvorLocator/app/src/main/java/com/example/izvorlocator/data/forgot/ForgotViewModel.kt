@@ -1,4 +1,4 @@
-package com.example.izvorlocator.data
+package com.example.izvorlocator.data.forgot
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf

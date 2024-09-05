@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.izvorlocator.components.AppToolBar
-import com.example.izvorlocator.data.RegisterViewModel
+import com.example.izvorlocator.data.register.RegisterViewModel
 import kotlinx.coroutines.launch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.mutableIntStateOf

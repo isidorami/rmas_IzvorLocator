@@ -1,4 +1,4 @@
-package com.example.izvorlocator.data
+package com.example.izvorlocator.data.register
 
 data class RegisterUIState(
     var firstname : String = "",

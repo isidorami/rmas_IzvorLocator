@@ -1,4 +1,4 @@
-package com.example.izvorlocator.data
+package com.example.izvorlocator.data.register
 
 sealed class RegisterUIEvent {
     data class FirstnameChanged(val firstname: String): RegisterUIEvent()

@@ -1,4 +1,4 @@
-package com.example.izvorlocator.data
+package com.example.izvorlocator.data.login
 
 sealed class LoginUIEvent {
     data class EmailChanged(val email: String): LoginUIEvent()
