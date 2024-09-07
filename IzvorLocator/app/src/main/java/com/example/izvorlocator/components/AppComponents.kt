@@ -257,9 +257,9 @@ fun ClickableLoginTextComponent(question: String, text: String, onTextSelected: 
         text = annotatedString,
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 40.dp),
+            .heightIn(30.dp),
         style = TextStyle(
-            fontSize = 21.sp,
+            fontSize = 18.sp,
             fontWeight = FontWeight.Normal,
             fontStyle = FontStyle.Normal,
             textAlign = TextAlign.Center

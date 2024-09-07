@@ -8,15 +8,25 @@ import com.example.izvorlocator.app.Screen
 import com.example.izvorlocator.data.validation.Validator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
-
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import android.net.Uri
+import androidx.compose.runtime.State
 
 class RegisterViewModel : ViewModel(){
 
     private var tag = RegisterViewModel::class.simpleName
 
     var registerUIState = mutableStateOf(RegisterUIState())
-
     var allValidationsPassed = mutableStateOf(false)
+
+    private lateinit var databaseReference: DatabaseReference
+    private lateinit var storageReference: StorageReference
+
+    private val _imageUri = mutableStateOf<Uri?>(null)
+    val imageUri: State<Uri?> get() = _imageUri
 
     fun onEvent(event: RegisterUIEvent){
 
@@ -74,7 +84,10 @@ class RegisterViewModel : ViewModel(){
     private fun register(){
         if(allValidationsPassed.value){
             createUserInFirebase(
+                firstName = registerUIState.value.firstname,
+                lastName = registerUIState.value.lastname,
                 email = registerUIState.value.email,
+                phone = registerUIState.value.phone,
                 password = registerUIState.value.password
             )
         }
@@ -85,18 +98,61 @@ class RegisterViewModel : ViewModel(){
             && pom.emailError && pom.phoneError && pom.passwordError)
     }
 
-    private fun createUserInFirebase(email:String, password: String){
+    private fun createUserInFirebase(firstName:String, lastName:String, email:String, phone:String, password:String){
         FirebaseAuth.getInstance()
             .createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener{
-                Log.d(tag,"IN COMPLETE LISTENER")
+                Log.d(tag,"IN COMPLETE LISTENER -> FIREBASE")
                 Log.d(tag,"${it.isSuccessful}")
                 if(it.isSuccessful){
-                    AppRouter.navigateTo(Screen.MapScreen)
+                    storeUserInDatabase(firstName,lastName,email,phone)
                 }
             }
             .addOnFailureListener{
-                Log.d(tag,"IN FAILURE LISTENER")
+                Log.d(tag,"IN FAILURE LISTENER -> NOT CREATED USER IN FIREBASE")
+                Log.d(tag,"${it.message}")
+            }
+    }
+
+    private fun storeUserInDatabase(firstName:String, lastName:String, email:String, phone:String){
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users")
+        val user = User(firstName, lastName, email, phone)
+
+        if(uid != null) {
+            databaseReference.child(uid).setValue(user)
+                .addOnCompleteListener{
+                    Log.d(tag,"IN COMPLETE LISTENER -> USER IN DATABASE")
+                    Log.d(tag,"${it.isSuccessful}")
+                    if(it.isSuccessful){
+                        val uriToUpload = _imageUri.value ?: Uri.parse("android.resource://com.example.izvorlocator/drawable/profile_photo")
+                        uploadImageToFirebase(uriToUpload)
+                    }
+                }
+                .addOnFailureListener{
+                    Log.d(tag,"IN FAILURE LISTENER -> NOT STORED USER IN DATABASE")
+                    Log.d(tag,"${it.message}")
+                }
+        }
+    }
+
+    fun onImagePicked(uri: Uri) {
+        _imageUri.value = uri
+    }
+
+    private fun uploadImageToFirebase(imageUri: Uri) {
+        storageReference = FirebaseStorage.getInstance().getReference("Users/"+FirebaseAuth.getInstance().currentUser?.uid)
+
+        storageReference.putFile(imageUri)
+            .addOnCompleteListener{
+                Log.d(tag,"IMAGE UPLOAD HERE -> ${it.isSuccessful}")
+                if(it.isSuccessful){
+                    _imageUri.value = null
+                    AppRouter.navigateTo(Screen.LoginScreen)
+                }
+            }
+            .addOnFailureListener{
+                Log.d(tag,"IMAGE NOT UPLOADED")
                 Log.d(tag,"${it.message}")
             }
     }

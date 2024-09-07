@@ -51,7 +51,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -79,6 +78,14 @@ dependencies {
     // Add the dependency for the Firebase Authentication library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation(libs.google.firebase.auth)
+    // Add the dependency for Firebase Storage
+    implementation(libs.google.firebase.storage)
+    // Add the dependency for Firebase Realtime Database
+    implementation(libs.google.firebase.database)
 
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    // Add this line to include activity-ktx
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.coil.compose)
 }

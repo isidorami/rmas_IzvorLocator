@@ -32,7 +32,6 @@ fun ForgotPasswordScreen(forgotViewModel: ForgotViewModel = viewModel()){
             .padding(28.dp)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
-            NormalTextComponent(value = stringResource(id = R.string.greeting))
             HeadingTextComponent(value = stringResource(id = R.string.forgot_password_naslov))
             Spacer(modifier = Modifier.height(40.dp))
             TextFieldComponent(

@@ -38,7 +38,6 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()){
             .padding(28.dp)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
-            NormalTextComponent(value = stringResource(id = R.string.greeting))
             HeadingTextComponent(value = stringResource(id = R.string.login_naslov))
             Spacer(modifier = Modifier.height(40.dp))
             TextFieldComponent(
@@ -70,9 +69,9 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()){
                 },
                 isEnabled = loginViewModel.allValidationsPassed.value
             )
-            Spacer(modifier = Modifier.height(30.dp))
-            DividerTextComponent()
             Spacer(modifier = Modifier.height(20.dp))
+            DividerTextComponent()
+            Spacer(modifier = Modifier.height(10.dp))
             ClickableLoginTextComponent(
                 question = stringResource(id = R.string.nemas)+" "
                 , text = stringResource(id = R.string.register)+"!"
