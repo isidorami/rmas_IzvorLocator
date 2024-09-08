@@ -1,6 +1,5 @@
 package com.example.izvorlocator.data.user
 
-import androidx.compose.runtime.MutableState
 
 data class UserUIState(
     var firstname : String = "",

@@ -7,13 +7,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.izvorlocator.components.NormalTextComponent
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.izvorlocator.data.user.UserList
+import com.example.izvorlocator.data.user.UserViewModel
 
 @Composable
-fun RangScreen() {
+fun RangScreen(userViewModel: UserViewModel = viewModel()) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -21,7 +24,14 @@ fun RangScreen() {
             .padding(28.dp)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
-            NormalTextComponent(value = "RANG")
+
+            LaunchedEffect(Unit) {
+                userViewModel.fetchAllUsers()
+            }
+
+            val sortedUserList = userViewModel.allUsersList.value
+
+            UserList(users = sortedUserList)
         }
     }
 }

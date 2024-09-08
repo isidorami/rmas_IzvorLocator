@@ -31,16 +31,7 @@ fun IzvorLocatorApp(){
                     ForgotPasswordScreen()
                 }
                 is Screen.MapScreen -> {
-                    NavScreen(currentScreen = stringResource(R.string.mapa))
-                }
-                is Screen.RangScreen -> {
-                    NavScreen(currentScreen = stringResource(R.string.rangiranje_korisnika))
-                }
-                is Screen.ListScreen -> {
-                    NavScreen(currentScreen = stringResource(R.string.lista_izvora))
-                }
-                is Screen.ProfileScreen -> {
-                    NavScreen(currentScreen = stringResource(id = R.string.moj_profil))
+                    NavScreen()
                 }
             }
         }

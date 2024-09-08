@@ -1,6 +1,7 @@
 package com.example.izvorlocator.components
 
 import android.util.Log
+import android.util.Size
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -53,9 +54,11 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.izvorlocator.R
+import com.example.izvorlocator.ui.theme.Accent
 import com.example.izvorlocator.ui.theme.GrayColor
 import com.example.izvorlocator.ui.theme.Primary
 import com.example.izvorlocator.ui.theme.Secondary
@@ -78,7 +81,7 @@ fun NormalTextComponent(value: String) {
 }
 
 @Composable
-fun ProfileInfoRow(icon: ImageVector, description: String) {
+fun ProfileInfoRow(icon: ImageVector, description: String, fontSize: TextUnit = 18.sp) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -99,7 +102,7 @@ fun ProfileInfoRow(icon: ImageVector, description: String) {
                 .align(Alignment.CenterVertically)
                 .fillMaxWidth(),
             style = TextStyle(
-                fontSize = 18.sp,
+                fontSize = fontSize,
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal
             ),
@@ -240,7 +243,7 @@ fun ButtonComponent(
             .fillMaxWidth()
             .heightIn(48.dp)
             .background(
-                brush = Brush.horizontalGradient(listOf(Secondary, Primary)),
+                brush = Brush.horizontalGradient(listOf(Accent, Secondary)),
                 shape = RoundedCornerShape(50.dp)
             ),
             contentAlignment = Alignment.Center

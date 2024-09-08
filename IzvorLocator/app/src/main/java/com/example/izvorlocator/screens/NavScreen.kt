@@ -32,7 +32,7 @@ import com.example.izvorlocator.R
 import com.example.izvorlocator.data.user.UserViewModel
 
 @Composable
-fun NavScreen(userViewModel: UserViewModel = viewModel(), currentScreen : String){
+fun NavScreen(userViewModel: UserViewModel = viewModel()){
 
     val items = listOf(
         stringResource(R.string.mapa),

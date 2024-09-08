@@ -2,6 +2,7 @@ package com.example.izvorlocator.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +36,8 @@ import com.example.izvorlocator.components.HeadingTextComponent
 import com.example.izvorlocator.components.NormalTextComponent
 import com.example.izvorlocator.data.user.UserViewModel
 import com.example.izvorlocator.components.ProfileInfoRow
+import com.example.izvorlocator.ui.theme.Primary
+import com.example.izvorlocator.ui.theme.Secondary
 
 @Composable
 fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
@@ -72,6 +75,7 @@ fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
                         modifier = Modifier
                             .size(150.dp)
                             .clip(CircleShape)
+                            .border(2.dp, color = Secondary, shape = CircleShape)
                     )
                 }
             }

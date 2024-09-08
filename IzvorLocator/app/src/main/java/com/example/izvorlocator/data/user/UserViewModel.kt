@@ -16,6 +16,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.*
 
 class UserViewModel : ViewModel(){
 
@@ -23,6 +24,9 @@ class UserViewModel : ViewModel(){
 
     private lateinit var databaseReference: DatabaseReference
     private lateinit var storageReference: StorageReference
+
+    private val _allUsersList = mutableStateOf<List<UserPhotoUIState>>(emptyList())
+    val allUsersList: State<List<UserPhotoUIState>> = _allUsersList
 
     var userUIState = mutableStateOf(UserUIState())
         private set
@@ -60,7 +64,7 @@ class UserViewModel : ViewModel(){
                     if (deleteTask.isSuccessful) {
                         Log.d(tag, "User account deleted.")
                         clearUserData()
-                        AppRouter.navigateTo(Screen.LoginScreen)
+                        AppRouter.navigateTo(Screen.RegisterScreen)
                     } else {
                         Log.e(tag, "Account deletion failed.")
                     }
@@ -83,7 +87,10 @@ class UserViewModel : ViewModel(){
                     Log.d(tag, user.toString())
                     user?.let {
                         userUIState.value = it
-                        fetchProfilePhoto(uid)
+                        fetchProfilePhoto(uid){ uri ->
+                            // Update the user object with their profile photo URL
+                            imageUri.value = uri
+                        }
                     }
                 }
                 override fun onCancelled(error: DatabaseError) {
@@ -93,15 +100,65 @@ class UserViewModel : ViewModel(){
         }
     }
 
-    fun fetchProfilePhoto(uid: String){
-        storageReference = FirebaseStorage.getInstance().reference.child("Users/${uid}")
+    fun fetchProfilePhoto(uid: String, onPhotoFetched: (Uri?) -> Unit) {
+        val storageReference = FirebaseStorage.getInstance().reference.child("Users/$uid")
+
         storageReference.downloadUrl
             .addOnSuccessListener { uri ->
-                imageUri.value = uri
                 Log.d("UserViewModel", "FETCH PHOTO SUCCESS")
+                onPhotoFetched(uri)
             }
             .addOnFailureListener {
                 Log.d("UserViewModel", "FETCH PHOTO FAILURE")
+                onPhotoFetched(null) // If there's no photo, return null
             }
+    }
+
+    fun fetchAllUsers() {
+        val databaseReference = FirebaseDatabase.getInstance().getReference("Users")
+
+        databaseReference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val userList = mutableListOf<UserPhotoUIState>()
+                val fetchTasks = mutableListOf<Deferred<Unit>>() // To keep track of photo fetching
+
+                val coroutineScope = CoroutineScope(Dispatchers.IO)
+
+                for (userSnapshot in snapshot.children) {
+                    val user = userSnapshot.getValue(UserPhotoUIState::class.java)
+                    user?.let {
+                        userList.add(it)
+                        val uid = userSnapshot.key.toString()
+
+                        // Create a CompletableDeferred for the photo fetch
+                        val photoDeferred = CompletableDeferred<Unit>()
+
+                        // Fetch profile photo asynchronously
+                        fetchProfilePhoto(uid) { uri ->
+                            it.profilePhotoUri = uri
+                            photoDeferred.complete(Unit) // Complete the deferred
+                        }
+
+                        // Add the deferred to the list of fetch tasks
+                        fetchTasks.add(photoDeferred)
+                    }
+                }
+
+                // Launch a coroutine to wait for all fetch tasks to complete
+                coroutineScope.launch {
+                    fetchTasks.awaitAll() // Await all photo fetch tasks
+
+                    // Update the list after all photos are fetched
+                    withContext(Dispatchers.Main) {
+                        _allUsersList.value = userList.sortedByDescending { it.points }
+                        Log.d(tag, "Updated user list with photos: $_allUsersList")
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d(tag, "ON CANCELLED -> DATABASE ERROR")
+            }
+        })
     }
 }

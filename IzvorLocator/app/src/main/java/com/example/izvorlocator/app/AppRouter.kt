@@ -7,20 +7,25 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import com.google.firebase.auth.FirebaseAuth
 
 sealed class Screen {
     object RegisterScreen : Screen()
     object LoginScreen : Screen()
     object ForgotPasswordScreen : Screen()
     object MapScreen : Screen()
-    object RangScreen : Screen()
-    object ListScreen : Screen()
-    object ProfileScreen : Screen()
 }
 
 object AppRouter{
-    private val screenStack = mutableListOf<Screen>(Screen.RegisterScreen)
-    var currentScreen: MutableState<Screen> = mutableStateOf(Screen.RegisterScreen)
+    private var auth = FirebaseAuth.getInstance()
+    private var uid = auth.currentUser?.uid
+
+    var currentScreen: MutableState<Screen> = mutableStateOf(
+        if (uid.isNullOrEmpty()) Screen.RegisterScreen else Screen.MapScreen
+    )
+    private val screenStack = mutableListOf<Screen>(
+        if (uid.isNullOrEmpty()) Screen.RegisterScreen else Screen.MapScreen
+    )
 
     fun navigateTo(destination: Screen) {
         screenStack.add(destination)
