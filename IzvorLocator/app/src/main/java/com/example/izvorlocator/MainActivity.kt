@@ -33,7 +33,6 @@ class MainActivity : ComponentActivity() {
     override fun onStop() {
         super.onStop()
         Toast.makeText(this, "onStop", Toast.LENGTH_SHORT).show()
-
     }
 
     override fun onDestroy() {

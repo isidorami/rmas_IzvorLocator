@@ -1,6 +1,8 @@
-package com.example.izvorlocator.data.register
+package com.example.izvorlocator.data.user
 
-data class User(
+import androidx.compose.runtime.MutableState
+
+data class UserUIState(
     var firstname : String = "",
     var lastname : String = "",
     var email : String = "",

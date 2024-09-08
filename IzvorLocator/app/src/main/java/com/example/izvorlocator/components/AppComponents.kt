@@ -6,10 +6,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
@@ -36,6 +38,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -59,7 +62,7 @@ import com.example.izvorlocator.ui.theme.Secondary
 import com.example.izvorlocator.ui.theme.componentShapes
 
 @Composable
-fun NormalTextComponent(value: String){
+fun NormalTextComponent(value: String) {
     Text(
         text = value,
         modifier = Modifier
@@ -67,12 +70,43 @@ fun NormalTextComponent(value: String){
             .heightIn(min = 40.dp),
         style = TextStyle(
             fontSize = 24.sp,
-            fontWeight = FontWeight.Normal,
             fontStyle = FontStyle.Normal
-        )
-        , color = colorResource(id = R.color.colorText)
-        , textAlign = TextAlign.Center
+        ),
+        color = colorResource(id = R.color.colorText),
+        textAlign = TextAlign.Center
     )
+}
+
+@Composable
+fun ProfileInfoRow(icon: ImageVector, description: String) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = description,
+            tint = Color.Gray,
+            modifier = Modifier.size(24.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+
+        Text(
+            text = description,
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .fillMaxWidth(),
+            style = TextStyle(
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Normal,
+                fontStyle = FontStyle.Normal
+            ),
+            color = colorResource(id = R.color.colorText),
+            textAlign = TextAlign.Start
+        )
+    }
 }
 
 @Composable
@@ -96,7 +130,7 @@ fun HeadingTextComponent(value: String){
 @Composable
 fun TextFieldComponent(
     labelValue: String,
-    painterResource: Painter,
+    imageVector: ImageVector,
     onTextChanged: (String) -> Unit,
     errorStatus: Boolean = false
 )
@@ -124,7 +158,7 @@ fun TextFieldComponent(
         singleLine = true,
         maxLines = 1,
         leadingIcon = {
-            Icon(painter = painterResource, contentDescription = "", modifier = Modifier.size(24.dp))
+            Icon(imageVector = imageVector, contentDescription = "", modifier = Modifier.size(24.dp))
         },
         isError = !errorStatus
     )
@@ -134,7 +168,7 @@ fun TextFieldComponent(
 @Composable
 fun PasswordTextFieldComponent(
     labelValue: String,
-    painterResource: Painter,
+    imageVector: ImageVector,
     onTextChanged: (String) -> Unit,
     errorStatus: Boolean = false
 ){
@@ -162,7 +196,7 @@ fun PasswordTextFieldComponent(
         singleLine = true,
         maxLines = 1,
         leadingIcon = {
-            Icon(painter = painterResource,
+            Icon(imageVector = imageVector,
                 contentDescription = "",
                 modifier = Modifier.size(26.dp))
         },

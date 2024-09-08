@@ -20,6 +20,7 @@
     <string name="zaborav">Zaboravljena lozinka?</string>
     <string name="imas">Već imaš svoj nalog?</string>
     <string name="nemas">Nemaš svoj nalog?</string>
+    <string name="delete">Obriši nalog</string>
 
     <string name="greska">Greška!</string>
     <string name="greska_txt">Pokušaj ponovo kasnije!</string>
@@ -27,5 +28,6 @@
     <string name="rangiranje_korisnika">Rangiranje korisnika</string>
     <string name="lista_izvora">Lista izvora</string>
     <string name="mapa">Mapa</string>
+    <string name="moj_profil">Moj profil</string>
 
 </resources>

@@ -7,13 +7,13 @@ import com.example.izvorlocator.app.AppRouter
 import com.example.izvorlocator.app.Screen
 import com.example.izvorlocator.data.validation.Validator
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import android.net.Uri
 import androidx.compose.runtime.State
+import com.example.izvorlocator.data.user.UserUIState
 
 class RegisterViewModel : ViewModel(){
 
@@ -117,10 +117,10 @@ class RegisterViewModel : ViewModel(){
     private fun storeUserInDatabase(firstName:String, lastName:String, email:String, phone:String){
         val uid = FirebaseAuth.getInstance().currentUser?.uid
         databaseReference = FirebaseDatabase.getInstance().getReference("Users")
-        val user = User(firstName, lastName, email, phone)
+        val userUIState = UserUIState(firstName, lastName, email, phone)
 
         if(uid != null) {
-            databaseReference.child(uid).setValue(user)
+            databaseReference.child(uid).setValue(userUIState)
                 .addOnCompleteListener{
                     Log.d(tag,"IN COMPLETE LISTENER -> USER IN DATABASE")
                     Log.d(tag,"${it.isSuccessful}")
@@ -155,37 +155,5 @@ class RegisterViewModel : ViewModel(){
                 Log.d(tag,"IMAGE NOT UPLOADED")
                 Log.d(tag,"${it.message}")
             }
-    }
-
-    fun logout(){
-        val firebaseAuth = FirebaseAuth.getInstance()
-        firebaseAuth.signOut()
-        val authStateListener = AuthStateListener{
-            if(it.currentUser == null){
-                Log.d(tag, "Inside Logout")
-                AppRouter.emptyStack()
-                AppRouter.navigateTo(Screen.LoginScreen)
-            }
-        }
-        firebaseAuth.addAuthStateListener(authStateListener)
-    }
-
-    fun deleteAccount() {
-        val firebaseAuth = FirebaseAuth.getInstance()
-        val currentUser = firebaseAuth.currentUser
-
-        currentUser?.let { user ->
-            user.delete()
-                .addOnCompleteListener { deleteTask ->
-                    if (deleteTask.isSuccessful) {
-                        Log.d(tag, "User account deleted.")
-                        AppRouter.navigateTo(Screen.LoginScreen)
-                    } else {
-                        Log.e(tag, "Account deletion failed.")
-                    }
-                }
-        } ?: run {
-            Log.e(tag, "No user is currently signed in.")
-        }
     }
 }

@@ -41,6 +41,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -126,35 +131,35 @@ fun RegisterScreen(registerViewModel: RegisterViewModel = viewModel()) {
                 }
                 TextFieldComponent(
                     labelValue = stringResource(id = R.string.name),
-                    painterResource(id = R.drawable.profile),
+                    imageVector = Icons.Default.Person,
                     onTextChanged = {
                         registerViewModel.onEvent(RegisterUIEvent.FirstnameChanged(it))
                     },
                     errorStatus = registerViewModel.registerUIState.value.firstnameError)
                 TextFieldComponent(
                     labelValue = stringResource(id = R.string.surname),
-                    painterResource(id = R.drawable.profile),
+                    imageVector = Icons.Default.Person,
                     onTextChanged = {
                         registerViewModel.onEvent(RegisterUIEvent.LastnameChanged(it))
                     },
                     errorStatus = registerViewModel.registerUIState.value.lastnameError)
                 TextFieldComponent(
                     labelValue = stringResource(id = R.string.email),
-                    painterResource(id = R.drawable.email),
+                    imageVector = Icons.Default.Email,
                     onTextChanged = {
                         registerViewModel.onEvent(RegisterUIEvent.EmailChanged(it))
                     },
                     errorStatus = registerViewModel.registerUIState.value.emailError)
                 TextFieldComponent(
                     labelValue = stringResource(id = R.string.phone),
-                    painterResource(id = R.drawable.phone),
+                    imageVector = Icons.Default.Phone,
                     onTextChanged = {
                         registerViewModel.onEvent(RegisterUIEvent.PhoneChanged(it))
                     },
                     errorStatus = registerViewModel.registerUIState.value.phoneError)
                 PasswordTextFieldComponent(
                     labelValue = stringResource(id = R.string.password),
-                    painterResource(id = R.drawable.lock),
+                    imageVector = Icons.Default.Lock,
                     onTextChanged = {
                         registerViewModel.onEvent(RegisterUIEvent.PasswordChanged(it))
                     },

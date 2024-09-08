@@ -29,14 +29,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.res.stringResource
 import com.example.izvorlocator.R
+import com.example.izvorlocator.data.user.UserViewModel
 
 @Composable
-fun NavScreen(registerViewModel: RegisterViewModel = viewModel(), currentScreen : String){
+fun NavScreen(userViewModel: UserViewModel = viewModel(), currentScreen : String){
 
     val items = listOf(
         stringResource(R.string.mapa),
         stringResource(R.string.rangiranje_korisnika),
-        stringResource(R.string.lista_izvora))
+        stringResource(R.string.lista_izvora),
+        stringResource(id = R.string.moj_profil))
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -79,7 +81,7 @@ fun NavScreen(registerViewModel: RegisterViewModel = viewModel(), currentScreen 
                         }
                     },
                     logoutButtonClicked = {
-                        registerViewModel.logout()
+                        userViewModel.logout()
                     }
                 )
             }
@@ -91,14 +93,6 @@ fun NavScreen(registerViewModel: RegisterViewModel = viewModel(), currentScreen 
                     .background(Color.White)
                     .padding(paddingValues)
             ) {
-                /*
-                    ButtonComponent(
-                        value = "Obriši nalog",
-                        onButtonClicked = { registerViewModel.deleteAccount() },
-                        isEnabled = true
-                    )
-                */
-
                 when(selectedTitle){
                     stringResource(R.string.mapa) -> {
                         MapScreen()
@@ -108,6 +102,9 @@ fun NavScreen(registerViewModel: RegisterViewModel = viewModel(), currentScreen 
                     }
                     stringResource(R.string.lista_izvora) -> {
                         ListScreen()
+                    }
+                    stringResource(id = R.string.moj_profil) -> {
+                        ProfileScreen()
                     }
                     else -> {}
                 }

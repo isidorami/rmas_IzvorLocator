@@ -15,6 +15,7 @@ sealed class Screen {
     object MapScreen : Screen()
     object RangScreen : Screen()
     object ListScreen : Screen()
+    object ProfileScreen : Screen()
 }
 
 object AppRouter{

@@ -39,6 +39,9 @@ fun IzvorLocatorApp(){
                 is Screen.ListScreen -> {
                     NavScreen(currentScreen = stringResource(R.string.lista_izvora))
                 }
+                is Screen.ProfileScreen -> {
+                    NavScreen(currentScreen = stringResource(id = R.string.moj_profil))
+                }
             }
         }
         BackHandler {
