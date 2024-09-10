@@ -10,6 +10,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,7 +34,10 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
@@ -173,6 +177,102 @@ fun TextFieldComponent(
         },
         isError = !errorStatus
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TextField2Component(
+    labelValue: String,
+    onTextChanged: (String) -> Unit,
+)
+{
+    val textValue = remember{ mutableStateOf("") }
+    OutlinedTextField(
+        value = textValue.value,
+        onValueChange = {
+            textValue.value = it
+            onTextChanged(it)
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(colorResource(id = R.color.colorBackground))
+            .clip(componentShapes.small)
+        ,
+        label = { Text(text = labelValue) },
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = colorResource(id = R.color.colorPrimary),
+            focusedLabelColor = colorResource(id = R.color.colorPrimary),
+            cursorColor = colorResource(id = R.color.colorPrimary),
+        ),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+        singleLine = true,
+        maxLines = 1,
+        isError = textValue.value.isEmpty()
+    )
+}
+
+@Composable
+fun RadioButtonComponent(
+    labelValue: String,
+    isSelected: Boolean,
+    onOptionSelected: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(colorResource(id = R.color.colorBackground))
+            .clip(componentShapes.small)
+            .padding(3.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RadioButton(
+            selected = isSelected,
+            onClick = onOptionSelected,
+            colors = RadioButtonDefaults.colors(
+                selectedColor = colorResource(id = R.color.colorPrimary),
+                unselectedColor = Color.Gray
+            )
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = labelValue,
+            color = Color.Black,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RadioButtonGroup(
+    label: String,
+    options: List<String>,
+    selectedOptionIndex: Int,
+    onOptionSelected: (Int) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(colorResource(id = R.color.colorBackground))
+            .clip(componentShapes.small)
+            .padding(6.dp)
+    ) {
+        // Label
+        Text(
+            text = label,
+            /*style = MaterialTheme.typography.body1,*/
+            color = colorResource(id = R.color.colorPrimary),
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+
+        // Radio buttons
+        options.forEachIndexed { index, option ->
+            RadioButtonComponent(
+                labelValue = option,
+                isSelected = index == selectedOptionIndex,
+                onOptionSelected = { onOptionSelected(index) }
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

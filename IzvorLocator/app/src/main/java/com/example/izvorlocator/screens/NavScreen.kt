@@ -36,6 +36,7 @@ import com.example.izvorlocator.screens.maps.ListScreen
 import com.example.izvorlocator.screens.maps.MapScreen
 import com.example.izvorlocator.screens.maps.ViewPoiScreen
 import com.example.izvorlocator.screens.users.ProfileScreen
+import com.example.izvorlocator.screens.users.RangScreen
 
 @Composable
 fun NavScreen(

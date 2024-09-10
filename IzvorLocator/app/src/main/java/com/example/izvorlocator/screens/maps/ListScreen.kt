@@ -41,7 +41,7 @@ fun PoiPreview(poi:Poi, navigateToViewPoi: () -> Unit, setSelectedPoi: (Poi) -> 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 modifier = Modifier.padding(6.dp),
-                text = "${poi.name}, ${poi.address}"
+                text = "${poi.naziv}"
             )
             Spacer(Modifier.weight(1f).fillMaxHeight())
 

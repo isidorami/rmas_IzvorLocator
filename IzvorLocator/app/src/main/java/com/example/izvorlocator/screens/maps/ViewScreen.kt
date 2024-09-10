@@ -4,9 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,7 +24,7 @@ fun ViewPoiScreen(poiViewModel: PoiViewModel, navigateBack: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally)
     {
         PoiCard(poi = poiViewModel.selectedPoi)
-        Row {
+        Column {
             ButtonComponent(
                 value = stringResource(R.string.nazad),
                 onButtonClicked = {
@@ -50,8 +48,11 @@ fun PoiCard(poi: Poi) {
         .padding(12.dp)
         .fillMaxWidth()) {
         Column() {
-            NormalTextComponent(value = poi.name)
-            Text(modifier = Modifier.padding(6.dp), text = "Address: ${poi.address}")
+            NormalTextComponent(value = poi.naziv)
+            Text(modifier = Modifier.padding(6.dp), text = "Vrsta: ${poi.vrsta}")
+            Text(modifier = Modifier.padding(6.dp), text = "Kvalitet vode: ${poi.kvalitet}")
+            Text(modifier = Modifier.padding(6.dp), text = "Dostupnost: ${poi.dostupnost}")
+
             Row(modifier = Modifier.padding(6.dp)) {
                 Text(text = "Latitude:")
                 Text(text = poi.lat.toString())

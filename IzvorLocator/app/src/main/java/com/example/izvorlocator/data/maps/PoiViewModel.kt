@@ -1,5 +1,6 @@
 package com.example.izvorlocator.data.maps
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -24,8 +25,15 @@ class PoiViewModel(private val storageService: StorageService): ViewModel() {
 
     val pois: Flow<List<Poi>> = storageService.pois
 
-    fun addPoi(name: String, address: String, lat: Double, lng: Double) {
-        val p = Poi(name=name, address=address, lat = lat, lng = lng)
+    fun addPoi(naziv: String, dostupnost: String, vrsta: String, kvalitet: String, slika: List<Uri>, lat: Double, lng: Double) {
+        val p = Poi(
+            naziv = naziv,
+            dostupnost = dostupnost,
+            vrsta = vrsta,
+            kvalitet = kvalitet,
+            lat = lat,
+            lng = lng
+        )
         viewModelScope.launch {
             storageService.save(p)
         }
@@ -37,9 +45,15 @@ class PoiViewModel(private val storageService: StorageService): ViewModel() {
         }
     }
 
-    fun editPoi(name:String, address: String, latLng: LatLng?){
+    fun editPoi(naziv: String, dostupnost: String, vrsta: String, kvalitet: String, slika: List<Uri>, latLng: LatLng?){
         viewModelScope.launch {
-            val p = Poi(id=selectedPoi.id, name=name, address=address)
+            val p = Poi(
+                id=selectedPoi.id,
+                naziv=naziv,
+                dostupnost = dostupnost,
+                vrsta = vrsta,
+                kvalitet = kvalitet
+            )
             storageService.update(p)
         }
     }

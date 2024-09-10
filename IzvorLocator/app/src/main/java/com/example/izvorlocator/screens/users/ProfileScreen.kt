@@ -58,7 +58,6 @@ fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
             .padding(28.dp)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
-            //HeadingTextComponent(value = stringResource(id = R.string.moj_profil))
             Spacer(modifier = Modifier.height(20.dp))
             Box(modifier = Modifier
                 .fillMaxWidth()

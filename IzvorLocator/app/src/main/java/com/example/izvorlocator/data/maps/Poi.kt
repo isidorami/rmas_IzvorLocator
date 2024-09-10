@@ -1,5 +1,6 @@
 package com.example.izvorlocator.data.maps
 
+import android.net.Uri
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.ServerTimestamp
 import java.util.Date
@@ -7,8 +8,11 @@ import java.util.Date
 data class Poi(
     @DocumentId val id: String = "",
     @ServerTimestamp val createdAt: Date = Date(),
-    val name: String = "",
-    val address: String = "",
-    val lat: Double=0.0,
-    val lng: Double= 0.0
+    val naziv: String = "",
+    val dostupnost: String = "", //tekstualno
+    val vrsta: String = "", //česma ili prirodni
+    val kvalitet: String = "",//pijaća, tehnička, zagađena voda
+    val slika: List<Uri>? = null,
+    val lat: Double = 0.0,
+    val lng: Double = 0.0
 )

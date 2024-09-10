@@ -1,4 +1,4 @@
-package com.example.izvorlocator.screens
+package com.example.izvorlocator.screens.users
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview

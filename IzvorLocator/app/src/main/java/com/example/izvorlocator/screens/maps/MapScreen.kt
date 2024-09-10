@@ -1,14 +1,12 @@
 package com.example.izvorlocator.screens.maps
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.example.izvorlocator.data.maps.Poi
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -46,7 +44,7 @@ fun MapScreen(
         list.forEach { poi ->
             Marker(
                 state = MarkerState(position = LatLng(poi.lat,poi.lng)),
-                title = poi.name,
+                title = poi.naziv,
                 onClick = {
                     setSelectedPoi(poi)
                     navigateToViewPoi()
