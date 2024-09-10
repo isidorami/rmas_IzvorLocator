@@ -1,4 +1,4 @@
-package com.example.izvorlocator.screens
+package com.example.izvorlocator.screens.users
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -35,11 +35,9 @@ import coil.compose.rememberImagePainter
 import com.example.izvorlocator.R
 import com.example.izvorlocator.components.ButtonComponent
 import com.example.izvorlocator.components.CustomIndeterminateProgress
-import com.example.izvorlocator.components.HeadingTextComponent
 import com.example.izvorlocator.components.NormalTextComponent
 import com.example.izvorlocator.data.user.UserViewModel
 import com.example.izvorlocator.components.ProfileInfoRow
-import com.example.izvorlocator.ui.theme.Primary
 import com.example.izvorlocator.ui.theme.Secondary
 
 @Composable

@@ -1,47 +1,23 @@
 package com.example.izvorlocator
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import com.example.izvorlocator.app.IzvorLocatorApp
+import com.example.izvorlocator.data.maps.PoiViewModel
+import com.example.izvorlocator.data.maps.PoiViewModelFactory
+import com.example.izvorlocator.data.maps.StorageService
 
 class MainActivity : ComponentActivity() {
+    private val poiViewModel: PoiViewModel by viewModels {
+        PoiViewModelFactory(StorageService((application as PoiApplication).db))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            IzvorLocatorApp()
+            IzvorLocatorApp(poiViewModel)
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Toast.makeText(this, "onStart", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Toast.makeText(this, "onResume", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Toast.makeText(this, "onPause", Toast.LENGTH_SHORT).show()
-
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Toast.makeText(this, "onStop", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Toast.makeText(this, "onDestroy", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        Toast.makeText(this, "onRestart", Toast.LENGTH_SHORT).show()
     }
 }

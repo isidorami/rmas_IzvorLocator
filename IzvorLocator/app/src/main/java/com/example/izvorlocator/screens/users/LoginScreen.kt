@@ -1,4 +1,4 @@
-package com.example.izvorlocator.screens
+package com.example.izvorlocator.screens.users
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -8,9 +8,7 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource

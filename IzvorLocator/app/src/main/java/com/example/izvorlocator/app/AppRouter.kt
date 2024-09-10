@@ -14,6 +14,11 @@ sealed class Screen {
     object LoginScreen : Screen()
     object ForgotPasswordScreen : Screen()
     object MapScreen : Screen()
+    object ListScreen : Screen()
+    object RangScreen : Screen()
+    object ProfileScreen : Screen()
+    object AddScreen : Screen()
+    object ViewPoiScreen : Screen()
 }
 
 object AppRouter{
@@ -34,7 +39,7 @@ object AppRouter{
 
     fun popBackStack() {
         if (screenStack.size > 1) {
-            screenStack.removeAt(screenStack.size - 1)
+            screenStack.removeLast()
             currentScreen.value = screenStack.last()
         }
         else{
@@ -42,9 +47,7 @@ object AppRouter{
         }
     }
     fun emptyStack() {
-        while(screenStack.size > 1) {
-            screenStack.removeAt(screenStack.size - 1)
-        }
+        screenStack.retainAll(listOf(currentScreen.value))
     }
 }
 

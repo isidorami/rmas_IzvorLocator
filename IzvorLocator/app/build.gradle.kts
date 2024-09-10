@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("com.google.gms.google-services")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -88,4 +89,14 @@ dependencies {
     // Add this line to include activity-ktx
     implementation(libs.androidx.activity.ktx)
     implementation(libs.coil.compose)
+
+    // Google Maps Compose library
+    implementation(libs.firebase.firestore)
+    implementation(libs.androidx.navigation.compose)
+    val mapsComposeVersion = "4.4.1"
+    implementation("com.google.maps.android:maps-compose:$mapsComposeVersion")
+    // Google Maps Compose utility library
+    implementation("com.google.maps.android:maps-compose-utils:$mapsComposeVersion")
+    // Google Maps Compose widgets library
+    implementation("com.google.maps.android:maps-compose-widgets:$mapsComposeVersion")
 }

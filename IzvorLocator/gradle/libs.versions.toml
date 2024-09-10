@@ -20,6 +20,8 @@ material3 = "1.1.0"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
 benchmarkMacro = "1.2.4"
+firebaseFirestore = "25.0.0"
+navigationCompose = "2.7.7"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
@@ -30,6 +32,8 @@ google-firebase-auth = { group = "com.google.firebase", name = "firebase-auth", 
 google-firebase-storage = { group = "com.google.firebase", name = "firebase-storage" }
 google-firebase-database = { group = "com.google.firebase", name = "firebase-database" }
 google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBomVersion" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

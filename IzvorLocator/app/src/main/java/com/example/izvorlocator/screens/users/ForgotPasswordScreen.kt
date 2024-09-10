@@ -1,4 +1,4 @@
-package com.example.izvorlocator.screens
+package com.example.izvorlocator.screens.users
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -12,7 +12,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -20,7 +19,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.izvorlocator.R
 import com.example.izvorlocator.components.ButtonComponent
 import com.example.izvorlocator.components.HeadingTextComponent
-import com.example.izvorlocator.components.NormalTextComponent
 import com.example.izvorlocator.components.TextFieldComponent
 import com.example.izvorlocator.data.forgot.ForgotUIEvent
 import com.example.izvorlocator.data.forgot.ForgotViewModel

@@ -6,30 +6,33 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.example.izvorlocator.screens.ForgotPasswordScreen
-import com.example.izvorlocator.screens.LoginScreen
+import androidx.lifecycle.ViewModel
+import com.example.izvorlocator.data.maps.PoiViewModel
+import com.example.izvorlocator.data.maps.PoiViewModelFactory
+import com.example.izvorlocator.screens.users.ForgotPasswordScreen
+import com.example.izvorlocator.screens.users.LoginScreen
 import com.example.izvorlocator.screens.NavScreen
-import com.example.izvorlocator.screens.RegisterScreen
+import com.example.izvorlocator.screens.users.RegisterScreen
 
 @Composable
-fun IzvorLocatorApp(){
+fun IzvorLocatorApp(poiViewModel: PoiViewModel){
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Color.White
         ) {
         Crossfade(targetState = AppRouter.currentScreen, label = "") { currentState->
             when(currentState.value){
-                is Screen.RegisterScreen -> {
+                Screen.RegisterScreen -> {
                     RegisterScreen()
                 }
-                is Screen.LoginScreen -> {
+                Screen.LoginScreen -> {
                     LoginScreen()
                 }
-                is Screen.ForgotPasswordScreen -> {
+                Screen.ForgotPasswordScreen -> {
                     ForgotPasswordScreen()
                 }
-                is Screen.MapScreen -> {
-                    NavScreen()
+                else -> {
+                    NavScreen(poiViewModel = poiViewModel)
                 }
             }
         }

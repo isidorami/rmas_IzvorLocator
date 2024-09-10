@@ -29,5 +29,8 @@
     <string name="lista_izvora">Lista izvora</string>
     <string name="mapa">Mapa</string>
     <string name="moj_profil">Moj profil</string>
+    <string name="nazad">Nazad</string>
+    <string name="obrisi_marker">Obriši marker</string>
+    <string name="dodaj_marker">Dodaj marker</string>
 
 </resources>

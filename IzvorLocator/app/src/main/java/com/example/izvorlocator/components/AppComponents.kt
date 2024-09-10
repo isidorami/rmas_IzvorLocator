@@ -120,7 +120,6 @@ fun ProfileInfoRow(icon: ImageVector, description: String, fontSize: TextUnit = 
         )
     }
 }
-
 @Composable
 fun HeadingTextComponent(value: String){
     Text(
