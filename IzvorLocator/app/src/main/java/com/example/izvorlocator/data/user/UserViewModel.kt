@@ -24,6 +24,7 @@ class UserViewModel : ViewModel(){
 
     private lateinit var databaseReference: DatabaseReference
     private lateinit var storageReference: StorageReference
+    var isLoading = mutableStateOf(false)
 
     private val _allUsersList = mutableStateOf<List<UserPhotoUIState>>(emptyList())
     val allUsersList: State<List<UserPhotoUIState>> = _allUsersList
@@ -55,6 +56,7 @@ class UserViewModel : ViewModel(){
     }
 
     fun deleteAccount() {
+        isLoading.value = true
         val firebaseAuth = FirebaseAuth.getInstance()
         val currentUser = firebaseAuth.currentUser
 
@@ -63,18 +65,22 @@ class UserViewModel : ViewModel(){
                 .addOnCompleteListener { deleteTask ->
                     if (deleteTask.isSuccessful) {
                         Log.d(tag, "User account deleted.")
+                        isLoading.value = false
                         clearUserData()
                         AppRouter.navigateTo(Screen.RegisterScreen)
                     } else {
                         Log.e(tag, "Account deletion failed.")
+                        isLoading.value = false
                     }
                 }
         } ?: run {
             Log.e(tag, "No user is currently signed in.")
+            isLoading.value = false
         }
     }
 
     fun fetchUser(){
+        isLoading.value = true
         val auth = FirebaseAuth.getInstance()
         val uid = auth.currentUser?.uid.toString()
 
@@ -92,9 +98,11 @@ class UserViewModel : ViewModel(){
                             imageUri.value = uri
                         }
                     }
+                    isLoading.value = false
                 }
                 override fun onCancelled(error: DatabaseError) {
                     Log.d(tag,"ON CANCELLED -> DATABASE ERROR")
+                    isLoading.value = false
                 }
             })
         }
@@ -115,6 +123,7 @@ class UserViewModel : ViewModel(){
     }
 
     fun fetchAllUsers() {
+        isLoading.value = true
         val databaseReference = FirebaseDatabase.getInstance().getReference("Users")
 
         databaseReference.addValueEventListener(object : ValueEventListener {
@@ -152,12 +161,13 @@ class UserViewModel : ViewModel(){
                     withContext(Dispatchers.Main) {
                         _allUsersList.value = userList.sortedByDescending { it.points }
                         Log.d(tag, "Updated user list with photos: $_allUsersList")
+                        isLoading.value = false
                     }
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {
                 Log.d(tag, "ON CANCELLED -> DATABASE ERROR")
+                isLoading.value = false
             }
         })
     }

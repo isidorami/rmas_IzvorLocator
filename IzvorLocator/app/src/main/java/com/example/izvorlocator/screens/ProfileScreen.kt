@@ -21,6 +21,8 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,6 +34,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.example.izvorlocator.R
 import com.example.izvorlocator.components.ButtonComponent
+import com.example.izvorlocator.components.CustomIndeterminateProgress
 import com.example.izvorlocator.components.HeadingTextComponent
 import com.example.izvorlocator.components.NormalTextComponent
 import com.example.izvorlocator.data.user.UserViewModel
@@ -42,11 +45,11 @@ import com.example.izvorlocator.ui.theme.Secondary
 @Composable
 fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
 
+    val isLoading by remember { userViewModel.isLoading }
     // Data fetching happens only once when the screen is first displayed
     LaunchedEffect(Unit) {
         userViewModel.fetchUser()
     }
-
     val userState = userViewModel.userUIState.value
     val imageUri = userViewModel.imageUri.value
 
@@ -103,6 +106,9 @@ fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
                 onButtonClicked = { userViewModel.deleteAccount() },
                 isEnabled = true
             )
+        }
+        if(isLoading) {
+            CustomIndeterminateProgress(modifier = Modifier)
         }
     }
 }

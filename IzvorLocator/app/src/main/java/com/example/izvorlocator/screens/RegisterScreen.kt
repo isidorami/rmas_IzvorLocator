@@ -49,12 +49,15 @@ import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
+import com.example.izvorlocator.components.CustomIndeterminateProgress
 import com.example.izvorlocator.ui.theme.Primary
 import com.example.izvorlocator.ui.theme.Secondary
 
@@ -64,6 +67,7 @@ fun RegisterScreen(registerViewModel: RegisterViewModel = viewModel()) {
         uri?.let { registerViewModel.onImagePicked(it) }
     }
     val imageUri = registerViewModel.imageUri.value
+    val isLoading by remember { registerViewModel.isLoading }
 
     Surface(
             modifier = Modifier
@@ -71,8 +75,8 @@ fun RegisterScreen(registerViewModel: RegisterViewModel = viewModel()) {
                 .background(Color.White)
                 .padding(28.dp)
         ) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                HeadingTextComponent(value = stringResource(id = R.string.register_naslov))
+        Column(modifier = Modifier.fillMaxSize()) {
+            HeadingTextComponent(value = stringResource(id = R.string.register_naslov))
                 Spacer(modifier = Modifier.height(20.dp))
                 Box(modifier = Modifier
                     .fillMaxWidth()
@@ -183,6 +187,9 @@ fun RegisterScreen(registerViewModel: RegisterViewModel = viewModel()) {
 
             }
         }
+    if(isLoading) {
+        CustomIndeterminateProgress(modifier = Modifier)
+    }
 }
 
 @Preview

@@ -21,6 +21,7 @@ class RegisterViewModel : ViewModel(){
 
     var registerUIState = mutableStateOf(RegisterUIState())
     var allValidationsPassed = mutableStateOf(false)
+    var isLoading = mutableStateOf(false)
 
     private lateinit var databaseReference: DatabaseReference
     private lateinit var storageReference: StorageReference
@@ -99,18 +100,21 @@ class RegisterViewModel : ViewModel(){
     }
 
     private fun createUserInFirebase(firstName:String, lastName:String, email:String, phone:String, password:String){
+        isLoading.value = true
         FirebaseAuth.getInstance()
             .createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener{
                 Log.d(tag,"IN COMPLETE LISTENER -> FIREBASE")
                 Log.d(tag,"${it.isSuccessful}")
                 if(it.isSuccessful){
+                    isLoading.value = true
                     storeUserInDatabase(firstName,lastName,email,phone)
                 }
             }
             .addOnFailureListener{
                 Log.d(tag,"IN FAILURE LISTENER -> NOT CREATED USER IN FIREBASE")
                 Log.d(tag,"${it.message}")
+                isLoading.value=false
             }
     }
 
@@ -125,6 +129,7 @@ class RegisterViewModel : ViewModel(){
                     Log.d(tag,"IN COMPLETE LISTENER -> USER IN DATABASE")
                     Log.d(tag,"${it.isSuccessful}")
                     if(it.isSuccessful){
+                        isLoading.value = true
                         val uriToUpload = _imageUri.value ?: Uri.parse("android.resource://com.example.izvorlocator/drawable/profile_photo")
                         uploadImageToFirebase(uriToUpload)
                     }
@@ -132,6 +137,7 @@ class RegisterViewModel : ViewModel(){
                 .addOnFailureListener{
                     Log.d(tag,"IN FAILURE LISTENER -> NOT STORED USER IN DATABASE")
                     Log.d(tag,"${it.message}")
+                    isLoading.value=false
                 }
         }
     }
@@ -148,12 +154,14 @@ class RegisterViewModel : ViewModel(){
                 Log.d(tag,"IMAGE UPLOAD HERE -> ${it.isSuccessful}")
                 if(it.isSuccessful){
                     _imageUri.value = null
+                    isLoading.value = false
                     AppRouter.navigateTo(Screen.LoginScreen)
                 }
             }
             .addOnFailureListener{
                 Log.d(tag,"IMAGE NOT UPLOADED")
                 Log.d(tag,"${it.message}")
+                isLoading.value=false
             }
     }
 }

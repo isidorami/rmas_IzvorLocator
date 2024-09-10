@@ -1,8 +1,13 @@
 package com.example.izvorlocator.data.login
 
+import android.app.Dialog
 import android.util.Log
+import android.view.Window
 import android.widget.Toast
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.izvorlocator.app.AppRouter
 import com.example.izvorlocator.app.Screen
@@ -15,6 +20,8 @@ class LoginViewModel: ViewModel() {
     var loginUIState = mutableStateOf(LoginUIState())
 
     var allValidationsPassed = mutableStateOf(false)
+
+    var isLoading = mutableStateOf(false)
 
     fun onEvent(event: LoginUIEvent){
 
@@ -53,16 +60,19 @@ class LoginViewModel: ViewModel() {
         }
     }
     private fun loginUserWithFirebase(email:String, password: String){
+        isLoading.value = true
         FirebaseAuth.getInstance()
             .signInWithEmailAndPassword(email, password)
             .addOnCompleteListener{
                 Log.d(tag,"IN COMPLETE LISTENER")
                 Log.d(tag,"${it.isSuccessful}")
                 if(it.isSuccessful){
+                    isLoading.value = false
                     AppRouter.navigateTo(Screen.MapScreen)
                 }
             }
             .addOnFailureListener{
+                isLoading.value = false
                 Log.d(tag,"IN FAILURE LISTENER")
                 Log.d(tag,"${it.message}")
             }
@@ -71,4 +81,5 @@ class LoginViewModel: ViewModel() {
         val pom = loginUIState.value
         return (pom.emailError && pom.passwordError)
     }
+
 }

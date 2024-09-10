@@ -1,20 +1,18 @@
 package com.example.izvorlocator.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,9 +22,9 @@ import com.example.izvorlocator.app.AppRouter
 import com.example.izvorlocator.app.Screen
 import com.example.izvorlocator.components.ButtonComponent
 import com.example.izvorlocator.components.ClickableLoginTextComponent
+import com.example.izvorlocator.components.CustomIndeterminateProgress
 import com.example.izvorlocator.components.DividerTextComponent
 import com.example.izvorlocator.components.HeadingTextComponent
-import com.example.izvorlocator.components.NormalTextComponent
 import com.example.izvorlocator.components.PasswordTextFieldComponent
 import com.example.izvorlocator.components.TextFieldComponent
 import com.example.izvorlocator.components.UnderlinedTextComponent
@@ -35,6 +33,9 @@ import com.example.izvorlocator.data.login.LoginViewModel
 
 @Composable
 fun LoginScreen(loginViewModel: LoginViewModel = viewModel()){
+
+    val isLoading by remember { loginViewModel.isLoading }
+
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -82,6 +83,9 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()){
                 , onTextSelected = {
                     AppRouter.navigateTo(Screen.RegisterScreen)
                 })
+        }
+        if(isLoading) {
+            CustomIndeterminateProgress(modifier = Modifier)
         }
     }
 }
