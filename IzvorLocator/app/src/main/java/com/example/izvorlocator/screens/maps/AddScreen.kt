@@ -1,81 +1,77 @@
 package com.example.izvorlocator.screens.maps
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import android.annotation.SuppressLint
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.izvorlocator.R
-import com.example.izvorlocator.components.ButtonComponent
-import com.example.izvorlocator.components.RadioButtonGroup
-import com.example.izvorlocator.components.TextField2Component
-import com.example.izvorlocator.components.TextFieldComponent
+import com.example.izvorlocator.components.*
 import com.example.izvorlocator.data.maps.EditViewModel
 import com.example.izvorlocator.data.maps.PoiViewModel
-import com.example.izvorlocator.data.register.RegisterUIEvent
-import com.example.izvorlocator.screens.users.ProfileScreen
+import com.example.izvorlocator.ui.theme.Background
 
+@SuppressLint("DefaultLocale")
 @Composable
-fun AddPoiScreen(editViewModel: EditViewModel = viewModel(),
-                 poiViewModel: PoiViewModel,
-                 navigateToMap: () -> Unit) {
+fun AddPoiScreen(poiViewModel: PoiViewModel,
+                 navigateToMap: () -> Unit,
+                 editViewModel: EditViewModel = viewModel()) {
+
+    // Auto-reset ViewModel when this Composable is disposed (e.g. on back press)
+    DisposableEffect(Unit) {
+        onDispose {
+            editViewModel.reset()
+        }
+    }
+
+    val multipleImagePickerLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.GetMultipleContents()
+    ) { uris: List<Uri> ->
+        editViewModel.onImagesPicked(uris)
+    }
+    val imageUris = editViewModel.slike
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(28.dp),
+            .background(Background)
+            .padding(18.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TextField2Component(
-            labelValue = "Naziv",
-            onTextChanged = { editViewModel.naziv = it })
-        TextField2Component(
-            labelValue = "Dostupnost izvora",
-            onTextChanged = {editViewModel.dostupnost = it })
-
-        var selectedOptionIndex by remember { mutableStateOf(0) }
-        val options = listOf("Pijaća", "Tehnička", "Zagađena")
-
-        RadioButtonGroup(
-            label = "Kvalitet vode",
-            options = options,
-            selectedOptionIndex = selectedOptionIndex,
-            onOptionSelected = { index -> selectedOptionIndex = index }
-        )
-        var selectedOptionIndex2 by remember { mutableStateOf(0) }
-        val options2 = listOf("Česma", "Prirodni")
-        RadioButtonGroup(
-            label = "Vrsta izvora",
-            options = options2,
-            selectedOptionIndex = selectedOptionIndex2,
-            onOptionSelected = { index -> selectedOptionIndex2 = index }
-        )
-
-        Row {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+            ){
+            ImageSwitcher(imageUris = imageUris)
+            Spacer(modifier = Modifier.height(8.dp))
+            SizedButtonComponent(
+                value = "Odaberi slike",
+                onButtonClicked = { multipleImagePickerLauncher.launch("image/*") },
+                width = 150.dp
+            )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Row{
             Text(
                 text = "Latituda:",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium
             )
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = editViewModel.lat.toString(),
+                text = String.format("%.5f", editViewModel.lat),
                 fontSize = 18.sp,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -86,33 +82,72 @@ fun AddPoiScreen(editViewModel: EditViewModel = viewModel(),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium
             )
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = editViewModel.lng.toString(),
+                text = String.format("%.5f", editViewModel.lng),
                 fontSize = 18.sp,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
-            ButtonComponent(
+        var selectedOptionIndex by remember { mutableStateOf(0) }
+        val options = listOf("Pijaća", "Tehnička")
+        editViewModel.kvalitet = options[selectedOptionIndex]
+        RadioButtonGroup(
+            label = "Kvalitet vode",
+            options = options,
+            selectedOptionIndex = selectedOptionIndex,
+            onOptionSelected = { index ->
+                run {
+                    selectedOptionIndex = index
+                    editViewModel.kvalitet = options[selectedOptionIndex]
+                }
+            }
+        )
+        var selectedOptionIndex2 by remember { mutableStateOf(0) }
+        val options2 = listOf("Česma", "Prirodni")
+        editViewModel.vrsta = options2[selectedOptionIndex2]
+        RadioButtonGroup(
+            label = "Vrsta izvora",
+            options = options2,
+            selectedOptionIndex = selectedOptionIndex2,
+            onOptionSelected = { index ->
+                run {
+                    selectedOptionIndex2 = index
+                    editViewModel.vrsta = options2[selectedOptionIndex2]
+                }
+            }
+        )
+        TextField2Component(
+            labelValue = "Pristupačnost izvora",
+            onTextChanged = {editViewModel.pristupacnost = it },
+            isError = editViewModel.pristupacnostError)
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ){
+            SizedButtonComponent(
                 value = stringResource(R.string.nazad),
                 onButtonClicked = {
                     navigateToMap()
                 },
-                isEnabled = true)
-            ButtonComponent(
+                width = 150.dp)
+            Spacer(modifier = Modifier.width(12.dp))
+            SizedButtonComponent(
                 value = stringResource(R.string.dodaj_marker),
                 onButtonClicked = {
                     poiViewModel.addPoi(
-                        editViewModel.naziv,
-                        editViewModel.dostupnost,
-                        editViewModel.kvalitet,
-                        editViewModel.vrsta,
-                        editViewModel.slika!!,
-                        editViewModel.lat,
-                        editViewModel.lng
+                        pristupacnost = editViewModel.pristupacnost,
+                        vrsta = editViewModel.vrsta,
+                        kvalitet = editViewModel.kvalitet,
+                        slike = editViewModel.slike,
+                        lat = editViewModel.lat,
+                        lng = editViewModel.lng
                     )
                     editViewModel.reset()
                     navigateToMap()
                 },
-                isEnabled = true)
+                width = 150.dp)
+        }
     }
 }

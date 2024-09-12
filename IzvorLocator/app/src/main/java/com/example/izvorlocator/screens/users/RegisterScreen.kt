@@ -31,34 +31,23 @@ import com.example.izvorlocator.data.register.RegisterViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.izvorlocator.components.CustomIndeterminateProgress
-import com.example.izvorlocator.ui.theme.Primary
-import com.example.izvorlocator.ui.theme.Secondary
+import com.example.izvorlocator.components.SizedButtonComponent
 
 @Composable
 fun RegisterScreen(registerViewModel: RegisterViewModel = viewModel()) {
@@ -97,39 +86,11 @@ fun RegisterScreen(registerViewModel: RegisterViewModel = viewModel()) {
                                 .clip(CircleShape)
                         )
                         Spacer(modifier = Modifier.width(40.dp))
-                        Button(
-                            onClick = {
-                                imagePickerLauncher.launch("image/*")
-                            },
-                            modifier = Modifier
-                                .widthIn(140.dp)
-                                .heightIn(48.dp),
-                            contentPadding = PaddingValues(),
-                            colors = ButtonDefaults.buttonColors(Color.Transparent),
-                            enabled = true
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .widthIn(140.dp)
-                                    .heightIn(48.dp)
-                                    .background(
-                                        brush = Brush.horizontalGradient(
-                                            listOf(
-                                                Secondary,
-                                                Primary
-                                            )
-                                        ),
-                                        shape = RoundedCornerShape(50.dp)
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = "Odaberi sliku",
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                        }
+                        SizedButtonComponent(
+                            value = "Odaberi sliku",
+                            onButtonClicked = { imagePickerLauncher.launch("image/*") },
+                            width = 150.dp
+                        )
                     }
                 }
                 TextFieldComponent(

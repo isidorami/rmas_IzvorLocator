@@ -25,10 +25,9 @@ class PoiViewModel(private val storageService: StorageService): ViewModel() {
 
     val pois: Flow<List<Poi>> = storageService.pois
 
-    fun addPoi(naziv: String, dostupnost: String, vrsta: String, kvalitet: String, slika: List<Uri>, lat: Double, lng: Double) {
+    fun addPoi(pristupacnost: String, vrsta: String, kvalitet: String, slike: List<Uri>, lat: Double, lng: Double) {
         val p = Poi(
-            naziv = naziv,
-            dostupnost = dostupnost,
+            pristupacnost = pristupacnost,
             vrsta = vrsta,
             kvalitet = kvalitet,
             lat = lat,
@@ -45,12 +44,11 @@ class PoiViewModel(private val storageService: StorageService): ViewModel() {
         }
     }
 
-    fun editPoi(naziv: String, dostupnost: String, vrsta: String, kvalitet: String, slika: List<Uri>, latLng: LatLng?){
+    fun editPoi(pristupacnost: String, vrsta: String, kvalitet: String, slika: List<Uri>, latLng: LatLng?){
         viewModelScope.launch {
             val p = Poi(
                 id=selectedPoi.id,
-                naziv=naziv,
-                dostupnost = dostupnost,
+                pristupacnost = pristupacnost,
                 vrsta = vrsta,
                 kvalitet = kvalitet
             )

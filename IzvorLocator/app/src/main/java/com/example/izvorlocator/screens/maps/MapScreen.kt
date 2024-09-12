@@ -27,7 +27,7 @@ fun MapScreen(
     val nis = LatLng(43.321445, 21.896104)
     /*TODO: pracenje realtime lokacije ovde*/
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(nis, 20f)
+        position = CameraPosition.fromLatLngZoom(nis, 80f)
     }
 
     val uiSettings by remember { mutableStateOf(MapUiSettings(zoomControlsEnabled = true)) }
@@ -44,7 +44,7 @@ fun MapScreen(
         list.forEach { poi ->
             Marker(
                 state = MarkerState(position = LatLng(poi.lat,poi.lng)),
-                title = poi.naziv,
+                title = "",
                 onClick = {
                     setSelectedPoi(poi)
                     navigateToViewPoi()

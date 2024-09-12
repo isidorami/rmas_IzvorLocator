@@ -10,16 +10,17 @@ import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.model.LatLng
 
 class EditViewModel: ViewModel() {
-    var naziv: String by mutableStateOf("")
-    var dostupnost: String by mutableStateOf("")
+    var pristupacnost: String by mutableStateOf("")
     var vrsta: String by mutableStateOf("")
     var kvalitet: String by mutableStateOf("")
-    var slika: List<Uri>? by mutableStateOf(null)
+    var slike: List<Uri> by mutableStateOf(emptyList())
 
     var lat: Double by mutableDoubleStateOf(0.0)
         private set
     var lng: Double by mutableDoubleStateOf(0.0)
         private set
+
+    var pristupacnostError: Boolean = false
 
     fun dodajLatLng(latLng: LatLng){
         lat = latLng.latitude
@@ -27,12 +28,16 @@ class EditViewModel: ViewModel() {
     }
 
     fun reset() {
-        naziv = ""
-        dostupnost = ""
+        pristupacnost = ""
         vrsta = ""
         kvalitet = ""
-        slika = null
+        slike = emptyList()
         lat = 0.0
         lng = 0.0
+
+        pristupacnostError = true
+    }
+    fun onImagesPicked(uri: List<Uri>) {
+        slike = uri
     }
 }

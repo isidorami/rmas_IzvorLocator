@@ -1,81 +1,34 @@
 package com.example.izvorlocator.components
 
+import android.net.Uri
 import android.util.Log
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.RadioButtonDefaults
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.res.*
+import androidx.compose.ui.text.*
+import androidx.compose.ui.text.font.*
+import androidx.compose.ui.text.input.*
+import androidx.compose.ui.text.style.*
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.*
+import coil.compose.rememberImagePainter
 import com.example.izvorlocator.R
-import com.example.izvorlocator.ui.theme.Accent
-import com.example.izvorlocator.ui.theme.GrayColor
-import com.example.izvorlocator.ui.theme.Primary
-import com.example.izvorlocator.ui.theme.Secondary
-import com.example.izvorlocator.ui.theme.componentShapes
+import com.example.izvorlocator.ui.theme.*
 
 @Composable
 fun NormalTextComponent(value: String) {
@@ -88,7 +41,7 @@ fun NormalTextComponent(value: String) {
             fontSize = 24.sp,
             fontStyle = FontStyle.Normal
         ),
-        color = colorResource(id = R.color.colorText),
+        color = TextColor,
         textAlign = TextAlign.Center
     )
 }
@@ -119,7 +72,7 @@ fun ProfileInfoRow(icon: ImageVector, description: String, fontSize: TextUnit = 
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal
             ),
-            color = colorResource(id = R.color.colorText),
+            color = TextColor,
             textAlign = TextAlign.Start
         )
     }
@@ -136,7 +89,7 @@ fun HeadingTextComponent(value: String){
             fontWeight = FontWeight.Bold,
             fontStyle = FontStyle.Normal
         )
-        , color = colorResource(id = R.color.colorText)
+        , color = TextColor
         , textAlign = TextAlign.Center
     )
 }
@@ -160,14 +113,14 @@ fun TextFieldComponent(
         },
         modifier = Modifier
             .fillMaxWidth()
-            .background(colorResource(id = R.color.colorBackground))
+            .background(Background)
             .clip(componentShapes.small)
         ,
         label = { Text(text = labelValue) },
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = colorResource(id = R.color.colorPrimary),
-            focusedLabelColor = colorResource(id = R.color.colorPrimary),
-            cursorColor = colorResource(id = R.color.colorPrimary),
+            focusedBorderColor = Primary,
+            focusedLabelColor = Primary,
+            cursorColor = Primary,
         ),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         singleLine = true,
@@ -184,6 +137,9 @@ fun TextFieldComponent(
 fun TextField2Component(
     labelValue: String,
     onTextChanged: (String) -> Unit,
+    isError: Boolean,
+    singleLine: Boolean = true,
+    maxLines: Int = 1
 )
 {
     val textValue = remember{ mutableStateOf("") }
@@ -195,19 +151,19 @@ fun TextField2Component(
         },
         modifier = Modifier
             .fillMaxWidth()
-            .background(colorResource(id = R.color.colorBackground))
+            .background(Background)
             .clip(componentShapes.small)
         ,
         label = { Text(text = labelValue) },
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = colorResource(id = R.color.colorPrimary),
-            focusedLabelColor = colorResource(id = R.color.colorPrimary),
-            cursorColor = colorResource(id = R.color.colorPrimary),
+            focusedBorderColor = Primary,
+            focusedLabelColor = Primary,
+            cursorColor = Primary,
         ),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-        singleLine = true,
-        maxLines = 1,
-        isError = textValue.value.isEmpty()
+        singleLine = singleLine,
+        maxLines = maxLines,
+        isError = isError
     )
 }
 
@@ -219,13 +175,12 @@ fun RadioButtonComponent(
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .background(colorResource(id = R.color.colorBackground))
-            .clip(componentShapes.small)
-            .padding(3.dp),
+            .background(Background)
+            .clip(componentShapes.small),
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(
+            modifier = Modifier.height(40.dp),
             selected = isSelected,
             onClick = onOptionSelected,
             colors = RadioButtonDefaults.colors(
@@ -237,11 +192,10 @@ fun RadioButtonComponent(
         Text(
             text = labelValue,
             color = Color.Black,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.wrapContentWidth()
         )
     }
 }
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RadioButtonGroup(
     label: String,
@@ -252,25 +206,30 @@ fun RadioButtonGroup(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(colorResource(id = R.color.colorBackground))
+            .background(Background)
             .clip(componentShapes.small)
             .padding(6.dp)
     ) {
-        // Label
         Text(
             text = label,
-            /*style = MaterialTheme.typography.body1,*/
-            color = colorResource(id = R.color.colorPrimary),
-            modifier = Modifier.padding(bottom = 4.dp)
+            color = Primary
         )
-
-        // Radio buttons
-        options.forEachIndexed { index, option ->
-            RadioButtonComponent(
-                labelValue = option,
-                isSelected = index == selectedOptionIndex,
-                onOptionSelected = { onOptionSelected(index) }
-            )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Background)
+                .clip(componentShapes.small),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            options.forEachIndexed { index, option ->
+                RadioButtonComponent(
+                    labelValue = option,
+                    isSelected = index == selectedOptionIndex,
+                    onOptionSelected = { onOptionSelected(index) }
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+            }
         }
     }
 }
@@ -331,6 +290,7 @@ fun PasswordTextFieldComponent(
     )
 }
 
+
 @Composable
 fun ButtonComponent(
     value: String,
@@ -364,6 +324,39 @@ fun ButtonComponent(
     }
 }
 
+
+@Composable
+fun SizedButtonComponent(
+    value: String,
+    onButtonClicked: () -> Unit,
+    width: Dp
+){
+    Button(onClick = {
+        onButtonClicked.invoke()
+    },
+        modifier = Modifier
+            .heightIn(48.dp)
+            .widthIn(width),
+        contentPadding = PaddingValues(),
+        colors = ButtonDefaults.buttonColors(Color.Transparent),
+    ) {
+        Box(modifier = Modifier
+            .widthIn(width)
+            .heightIn(48.dp)
+            .background(
+                brush = Brush.horizontalGradient(listOf(Accent, Secondary)),
+                shape = RoundedCornerShape(50.dp)
+            ),
+            contentAlignment = Alignment.Center
+        ){
+            Text(
+                text = value,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold)
+        }
+    }
+}
+
 @Composable
 fun DividerTextComponent(){
     Row(modifier = Modifier.fillMaxWidth(),
@@ -374,18 +367,6 @@ fun DividerTextComponent(){
                 .weight(1f),
             color = GrayColor,
             thickness = 1.dp)
-        /*Text(
-            modifier = Modifier.padding(8.dp),
-            text = "ili",
-            fontSize = 14.sp,
-            color = TextColor)
-        Divider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            color = GrayColor,
-            thickness = 1.dp)
-         */
     }
 }
 
@@ -502,5 +483,52 @@ fun CustomIndeterminateProgress(modifier: Modifier)
                 )
             }
         }
+    }
+}
+
+@Composable
+fun ImageSwitcher(imageUris: List<Uri>) {
+    var currentIndex by remember { mutableStateOf(0) }
+    if (currentIndex >= imageUris.size) {
+        currentIndex = 0
+    }
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ){
+            IconButton(
+                onClick = { if (currentIndex > 0) currentIndex-- },
+                modifier = Modifier.size(40.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "",
+                    modifier = Modifier.size(26.dp),
+                    tint = Color.Black
+                )
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Image(
+                painter = rememberImagePainter(
+                    data = imageUris.getOrNull(currentIndex) ?: R.drawable.blank
+                ),
+                contentDescription = "Profile Photo",
+                modifier = Modifier
+                    .size(200.dp)
+                    .clip(RectangleShape)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            IconButton(
+                onClick = { if (currentIndex < imageUris.size - 1) currentIndex++ },
+                modifier = Modifier.size(40.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowForward,
+                    contentDescription = "",
+                    modifier = Modifier.size(26.dp),
+                    tint = Color.Black
+                )
+            }
     }
 }

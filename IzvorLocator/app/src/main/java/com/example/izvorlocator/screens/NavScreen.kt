@@ -122,7 +122,6 @@ fun NavScreen(
 
                 when (currentScreen) {
                     is Screen.MapScreen -> {
-                        Log.d("NavScreen", "Navigating to MapScreen")
                         val poiList = poiViewModel.pois.collectAsState(initial = listOf())
 
                         MapScreen(
@@ -139,7 +138,6 @@ fun NavScreen(
                     }
 
                     is Screen.ListScreen -> {
-                        Log.d("NavScreen", "Navigating to ListScreen")
                         val poiList = poiViewModel.pois.collectAsState(initial = listOf())
 
                         ListScreen(
@@ -152,17 +150,14 @@ fun NavScreen(
                     }
 
                     is Screen.RangScreen -> {
-                        Log.d("NavScreen", "Navigating to RangScreen")
                         RangScreen()
                     }
 
                     is Screen.ProfileScreen -> {
-                        Log.d("NavScreen", "Navigating to ProfileScreen")
                         ProfileScreen()
                     }
 
                     is Screen.AddScreen -> {
-                        Log.d("NavScreen", "Navigating to AddScreen")
                         AddPoiScreen(
                             poiViewModel = poiViewModel,
                             navigateToMap = {
@@ -172,7 +167,6 @@ fun NavScreen(
                     }
 
                     is Screen.ViewPoiScreen -> {
-                        Log.d("NavScreen", "Navigating to ViewPoiScreen")
                         ViewPoiScreen(
                             poiViewModel = poiViewModel,
                             navigateBack = {

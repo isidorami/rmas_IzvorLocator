@@ -7,6 +7,7 @@ val Secondary = Color(0xFF28B463)
 val Accent = Color(0xFF3D9970)
 val TextColor = Color(0xFF1D1617)
 val GrayColor = Color(0xFF7B6F72)
+val Background = Color(0xFFFFFFFF)
 
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
