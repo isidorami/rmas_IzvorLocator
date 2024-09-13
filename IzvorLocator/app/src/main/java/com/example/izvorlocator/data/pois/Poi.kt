@@ -1,4 +1,4 @@
-package com.example.izvorlocator.data.maps
+package com.example.izvorlocator.data.pois
 
 import android.net.Uri
 import com.google.firebase.firestore.DocumentId

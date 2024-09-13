@@ -8,24 +8,25 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.*
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.izvorlocator.R
+import com.example.izvorlocator.app.AppRouter
 import com.example.izvorlocator.components.*
-import com.example.izvorlocator.data.maps.EditViewModel
-import com.example.izvorlocator.data.maps.PoiViewModel
+import com.example.izvorlocator.data.pois.EditViewModel
+import com.example.izvorlocator.data.pois.PoiViewModel
+import com.example.izvorlocator.data.user.UserViewModel
 import com.example.izvorlocator.ui.theme.Background
 
 @SuppressLint("DefaultLocale")
 @Composable
 fun AddPoiScreen(poiViewModel: PoiViewModel,
-                 navigateToMap: () -> Unit,
-                 editViewModel: EditViewModel = viewModel()) {
+                 editViewModel: EditViewModel = viewModel(),
+                 userViewModel: UserViewModel = viewModel()) {
 
     // Auto-reset ViewModel when this Composable is disposed (e.g. on back press)
     DisposableEffect(Unit) {
@@ -119,21 +120,12 @@ fun AddPoiScreen(poiViewModel: PoiViewModel,
         )
         TextField2Component(
             labelValue = "Pristupačnost izvora",
-            onTextChanged = {editViewModel.pristupacnost = it },
-            isError = editViewModel.pristupacnostError)
+            onTextChanged = {editViewModel.pristupacnost = it
+                editViewModel.pristupacnostError = (it=="") },
+            isError = editViewModel.pristupacnostError,
+            value = editViewModel.pristupacnost)
         Spacer(modifier = Modifier.height(8.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ){
-            SizedButtonComponent(
-                value = stringResource(R.string.nazad),
-                onButtonClicked = {
-                    navigateToMap()
-                },
-                width = 150.dp)
-            Spacer(modifier = Modifier.width(12.dp))
-            SizedButtonComponent(
+            ButtonComponent(
                 value = stringResource(R.string.dodaj_marker),
                 onButtonClicked = {
                     poiViewModel.addPoi(
@@ -144,10 +136,10 @@ fun AddPoiScreen(poiViewModel: PoiViewModel,
                         lat = editViewModel.lat,
                         lng = editViewModel.lng
                     )
+                    userViewModel.addPointsToUser(30)
                     editViewModel.reset()
-                    navigateToMap()
+                    AppRouter.popBackStack()
                 },
-                width = 150.dp)
-        }
+                isEnabled = true)
     }
 }

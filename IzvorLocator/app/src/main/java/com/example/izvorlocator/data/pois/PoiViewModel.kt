@@ -1,4 +1,4 @@
-package com.example.izvorlocator.data.maps
+package com.example.izvorlocator.data.pois
 
 import android.net.Uri
 import androidx.compose.runtime.getValue
@@ -7,7 +7,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
@@ -44,14 +43,18 @@ class PoiViewModel(private val storageService: StorageService): ViewModel() {
         }
     }
 
-    fun editPoi(pristupacnost: String, vrsta: String, kvalitet: String, slika: List<Uri>, latLng: LatLng?){
+    fun editPoi(pristupacnost: String, vrsta: String, kvalitet: String, slike: List<Uri>){
         viewModelScope.launch {
             val p = Poi(
                 id=selectedPoi.id,
                 pristupacnost = pristupacnost,
                 vrsta = vrsta,
-                kvalitet = kvalitet
+                kvalitet = kvalitet,
+                slike = slike,
+                lat = selectedPoi.lat,
+                lng = selectedPoi.lng
             )
+            selectedPoi = p
             storageService.update(p)
         }
     }

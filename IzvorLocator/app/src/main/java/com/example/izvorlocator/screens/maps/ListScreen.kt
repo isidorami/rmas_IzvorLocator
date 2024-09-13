@@ -7,17 +7,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,13 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.izvorlocator.components.ButtonComponent
 import com.example.izvorlocator.components.NormalTextComponent
 import com.example.izvorlocator.components.SizedButtonComponent
-import com.example.izvorlocator.data.maps.Poi
+import com.example.izvorlocator.data.pois.Poi
 import com.example.izvorlocator.ui.theme.Secondary
 
 @Composable
@@ -43,9 +38,16 @@ fun ListScreen(list: List<Poi>, navigateToViewPoi: () -> Unit, setSelectedPoi: (
             NormalTextComponent(value = "Trenutno nema unetih izvora na mapi!")
         }
     }else {
-        LazyColumn {
-            items(list) {
-                PoiPreview(poi = it, navigateToViewPoi, setSelectedPoi)
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .padding(28.dp)
+        ) {
+            LazyColumn {
+                items(list) {
+                    PoiPreview(poi = it, navigateToViewPoi, setSelectedPoi)
+                }
             }
         }
     }
@@ -56,17 +58,17 @@ fun ListScreen(list: List<Poi>, navigateToViewPoi: () -> Unit, setSelectedPoi: (
 fun PoiPreview(poi:Poi, navigateToViewPoi: () -> Unit, setSelectedPoi: (Poi) -> Unit){
     Card( modifier = Modifier
         .fillMaxWidth()
-        .padding(18.dp)
+        .padding(8.dp)
         .background(color = Color.White, shape = RoundedCornerShape(8.dp))
         .border(2.dp, color = Secondary, shape = RoundedCornerShape(8.dp))
     ) {
         Row (
-            modifier = Modifier.padding(18.dp),
+            modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ){
             Column(
-                modifier = Modifier.padding(18.dp),
+                modifier = Modifier.padding(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row {
@@ -95,7 +97,6 @@ fun PoiPreview(poi:Poi, navigateToViewPoi: () -> Unit, setSelectedPoi: (Poi) -> 
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
                 Row {
                     Text(
                         text = "Vrsta izvora:",
@@ -109,7 +110,6 @@ fun PoiPreview(poi:Poi, navigateToViewPoi: () -> Unit, setSelectedPoi: (Poi) -> 
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
                 Row {
                     Text(
                         text = "Kvalitet vode:",
@@ -130,7 +130,7 @@ fun PoiPreview(poi:Poi, navigateToViewPoi: () -> Unit, setSelectedPoi: (Poi) -> 
                 onButtonClicked = {
                     setSelectedPoi(poi)
                     navigateToViewPoi()
-                }, width = 120.dp
+                }, width = 150.dp
             )
         }
     }

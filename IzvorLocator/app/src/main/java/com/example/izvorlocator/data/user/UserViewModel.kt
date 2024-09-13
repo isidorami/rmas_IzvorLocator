@@ -109,7 +109,7 @@ class UserViewModel : ViewModel(){
     }
 
     fun fetchProfilePhoto(uid: String, onPhotoFetched: (Uri?) -> Unit) {
-        val storageReference = FirebaseStorage.getInstance().reference.child("Users/$uid")
+        storageReference = FirebaseStorage.getInstance().reference.child("Users/$uid")
 
         storageReference.downloadUrl
             .addOnSuccessListener { uri ->
@@ -171,4 +171,31 @@ class UserViewModel : ViewModel(){
             }
         })
     }
+    fun addPointsToUser(additionalPoints: Int) {
+        val auth = FirebaseAuth.getInstance()
+        val uid = auth.currentUser?.uid.toString()
+
+        val databaseReference = FirebaseDatabase.getInstance().getReference("Users")
+
+        if (uid.isNotEmpty()) {
+            databaseReference.child(uid).child("points").get().addOnSuccessListener { snapshot ->
+                val currentPoints = snapshot.getValue(Int::class.java) ?: 0
+
+                val newPoints = currentPoints + additionalPoints
+
+                val updates = mapOf<String, Any>("points" to newPoints)
+
+                databaseReference.child(uid).updateChildren(updates)
+                    .addOnSuccessListener {
+                        Log.d("proba", "Poeni uspešno dodati! Novi broj poena: $newPoints")
+                    }
+                    .addOnFailureListener { error ->
+                        Log.e("proba", "Dodavanje poena nije uspelo: ${error.message}")
+                    }
+            }.addOnFailureListener { error ->
+                Log.e("proba", "Greška pri preuzimanju poena: ${error.message}")
+            }
+        }
+    }
+
 }
