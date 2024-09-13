@@ -1,5 +1,7 @@
 package com.example.izvorlocator.screens
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,17 +32,21 @@ import com.example.izvorlocator.app.Screen
 import com.example.izvorlocator.data.pois.EditViewModel
 import com.example.izvorlocator.data.pois.PoiViewModel
 import com.example.izvorlocator.data.user.UserViewModel
-import com.example.izvorlocator.screens.maps.AddPoiScreen
-import com.example.izvorlocator.screens.maps.ListScreen
-import com.example.izvorlocator.screens.maps.MapScreen
-import com.example.izvorlocator.screens.maps.UpdatePoiScreen
-import com.example.izvorlocator.screens.maps.ViewPoiScreen
+import com.example.izvorlocator.screens.pois.AddPoiScreen
+import com.example.izvorlocator.screens.pois.ListScreen
+import com.example.izvorlocator.screens.location.MapScreen
+import com.example.izvorlocator.screens.location.SettingsScreen
+import com.example.izvorlocator.screens.pois.UpdatePoiScreen
+import com.example.izvorlocator.screens.pois.ViewPoiScreen
 import com.example.izvorlocator.screens.users.ProfileScreen
 import com.example.izvorlocator.screens.users.RangScreen
 
 @Composable
 fun NavScreen(
     poiViewModel: PoiViewModel,
+    context: Context,
+    startLocationService: Intent,
+    stopLocationService: Intent,
     userViewModel: UserViewModel = viewModel(),
     editViewModel: EditViewModel = viewModel()
 ) {
@@ -49,7 +55,8 @@ fun NavScreen(
         stringResource(R.string.mapa),
         stringResource(R.string.lista_izvora),
         stringResource(R.string.rangiranje_korisnika),
-        stringResource(R.string.moj_profil)
+        stringResource(R.string.moj_profil),
+        stringResource(id = R.string.settings)
     )
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -70,6 +77,7 @@ fun NavScreen(
                             is Screen.ListScreen -> index == 1
                             is Screen.RangScreen -> index == 2
                             is Screen.ProfileScreen -> index == 3
+                            is Screen.SettingsScreen -> index == 4
                             else -> false
                         },
                         onClick = {
@@ -81,6 +89,7 @@ fun NavScreen(
                                     1 -> AppRouter.navigateTo(Screen.ListScreen)
                                     2 -> AppRouter.navigateTo(Screen.RangScreen)
                                     3 -> AppRouter.navigateTo(Screen.ProfileScreen)
+                                    4 -> AppRouter.navigateTo(Screen.SettingsScreen)
                                 }
                             }
                         }
@@ -98,6 +107,7 @@ fun NavScreen(
                         is Screen.ListScreen -> items[1]
                         is Screen.RangScreen -> items[2]
                         is Screen.ProfileScreen -> items[3]
+                        is Screen.SettingsScreen -> items[4]
                         else -> items[0]
                     },
                     burgerButtonClicked = {
@@ -125,7 +135,7 @@ fun NavScreen(
                         val poiList = poiViewModel.pois.collectAsState(initial = listOf())
 
                         MapScreen(
-                            onMapLongClick = { latLng ->
+                            addPoi = { latLng ->
                                 editViewModel.dodajLatLng(latLng)
                                 AppRouter.navigateTo(Screen.AddPoiScreen)
                             },
@@ -173,6 +183,10 @@ fun NavScreen(
                         UpdatePoiScreen(
                             poiViewModel = poiViewModel
                         )
+                    }
+
+                    is Screen.SettingsScreen -> {
+                        SettingsScreen(context, startLocationService, stopLocationService)
                     }
 
                     else -> { }

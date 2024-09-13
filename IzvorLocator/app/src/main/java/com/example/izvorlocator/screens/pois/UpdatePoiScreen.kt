@@ -1,4 +1,4 @@
-package com.example.izvorlocator.screens.maps
+package com.example.izvorlocator.screens.pois
 
 import android.annotation.SuppressLint
 import android.net.Uri

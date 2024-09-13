@@ -20,6 +20,7 @@ sealed class Screen {
     object AddPoiScreen : Screen()
     object ViewPoiScreen : Screen()
     object UpdatePoiScreen : Screen()
+    object SettingsScreen : Screen()
 }
 
 object AppRouter{

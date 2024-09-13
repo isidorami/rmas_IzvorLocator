@@ -60,10 +60,19 @@ class PoiViewModel(private val storageService: StorageService): ViewModel() {
     }
 }
 
-class PoiViewModelFactory(private val storageService: StorageService) : ViewModelProvider.Factory {
+//class PoiViewModelFactory(private val storageService: StorageService) : ViewModelProvider.Factory {
+//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//        if (modelClass.isAssignableFrom(PoiViewModel::class.java)) {
+//            return PoiViewModel(storageService) as T
+//        }
+//        throw IllegalArgumentException("Unknown ViewModel class")
+//    }
+//}
+
+class PoiViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(PoiViewModel::class.java)) {
-            return PoiViewModel(storageService) as T
+            return PoiViewModel(StorageServiceSingleton.getInstance()) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

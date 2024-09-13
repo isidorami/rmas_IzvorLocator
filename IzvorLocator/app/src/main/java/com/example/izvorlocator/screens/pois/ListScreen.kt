@@ -1,4 +1,4 @@
-package com.example.izvorlocator.screens.maps
+package com.example.izvorlocator.screens.pois
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -27,21 +27,16 @@ import androidx.compose.ui.unit.sp
 import com.example.izvorlocator.components.NormalTextComponent
 import com.example.izvorlocator.components.SizedButtonComponent
 import com.example.izvorlocator.data.pois.Poi
+import com.example.izvorlocator.ui.theme.Background
 import com.example.izvorlocator.ui.theme.Secondary
 
 @Composable
 fun ListScreen(list: List<Poi>, navigateToViewPoi: () -> Unit, setSelectedPoi: (Poi) -> Unit) {
-    if(list.isEmpty()){
-        Column(
-            modifier = Modifier.padding(20.dp)
-        ){
-            NormalTextComponent(value = "Trenutno nema unetih izvora na mapi!")
-        }
-    }else {
+    if(list.isNotEmpty()){
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
+                .background(Background)
                 .padding(28.dp)
         ) {
             LazyColumn {
@@ -49,6 +44,12 @@ fun ListScreen(list: List<Poi>, navigateToViewPoi: () -> Unit, setSelectedPoi: (
                     PoiPreview(poi = it, navigateToViewPoi, setSelectedPoi)
                 }
             }
+        }
+    }else {
+        Column(
+            modifier = Modifier.padding(20.dp)
+        ){
+            NormalTextComponent(value = "Trenutno nema unetih izvora na mapi!")
         }
     }
 }
@@ -59,16 +60,15 @@ fun PoiPreview(poi:Poi, navigateToViewPoi: () -> Unit, setSelectedPoi: (Poi) -> 
     Card( modifier = Modifier
         .fillMaxWidth()
         .padding(8.dp)
-        .background(color = Color.White, shape = RoundedCornerShape(8.dp))
-        .border(2.dp, color = Secondary, shape = RoundedCornerShape(8.dp))
+        .background(color = Background, shape = RoundedCornerShape(8.dp))
+        .border(2.dp, color = Secondary, shape = RoundedCornerShape(8.dp)),
     ) {
-        Row (
+        Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.SpaceBetween
         ){
             Column(
-                modifier = Modifier.padding(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row {
@@ -126,7 +126,7 @@ fun PoiPreview(poi:Poi, navigateToViewPoi: () -> Unit, setSelectedPoi: (Poi) -> 
             }
             Spacer(modifier = Modifier.width(8.dp))
             SizedButtonComponent(
-                value = "Pogledaj",
+                value = "Više",
                 onButtonClicked = {
                     setSelectedPoi(poi)
                     navigateToViewPoi()

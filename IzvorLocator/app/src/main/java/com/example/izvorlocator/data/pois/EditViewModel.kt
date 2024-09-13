@@ -31,9 +31,6 @@ class EditViewModel: ViewModel() {
         vrsta = ""
         kvalitet = ""
         slike = emptyList()
-        lat = 0.0
-        lng = 0.0
-
         pristupacnostError = false
     }
     fun onImagesPicked(uri: List<Uri>) {

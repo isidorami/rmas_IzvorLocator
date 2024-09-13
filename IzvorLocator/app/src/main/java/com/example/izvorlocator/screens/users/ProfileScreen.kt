@@ -1,5 +1,7 @@
 package com.example.izvorlocator.screens.users
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,7 +20,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,6 +42,7 @@ import com.example.izvorlocator.components.CustomIndeterminateProgress
 import com.example.izvorlocator.components.NormalTextComponent
 import com.example.izvorlocator.data.user.UserViewModel
 import com.example.izvorlocator.components.ProfileInfoRow
+import com.example.izvorlocator.data.location.LocationService
 import com.example.izvorlocator.ui.theme.Secondary
 
 @Composable
@@ -107,10 +112,4 @@ fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
             CustomIndeterminateProgress(modifier = Modifier)
         }
     }
-}
-
-@Preview
-@Composable
-fun DefaultPreviewOfProfileScreen(){
-    ProfileScreen()
 }

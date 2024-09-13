@@ -7,6 +7,18 @@ import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 
+object StorageServiceSingleton {
+    private var instance: StorageService? = null
+
+    // Function to initialize the singleton instance
+    fun getInstance(): StorageService {
+        if (instance == null) {
+            instance = StorageService(FirebaseFirestore.getInstance())
+        }
+        return instance!!
+    }
+}
+
 class StorageService(private val firestore: FirebaseFirestore){
 
     val pois: Flow<List<Poi>>
