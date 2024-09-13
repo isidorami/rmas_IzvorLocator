@@ -16,22 +16,34 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.izvorlocator.R
+import com.example.izvorlocator.app.AppRouter
 import com.example.izvorlocator.components.*
-import com.example.izvorlocator.data.maps.EditViewModel
-import com.example.izvorlocator.data.maps.PoiViewModel
+import com.example.izvorlocator.data.pois.EditViewModel
+import com.example.izvorlocator.data.pois.PoiViewModel
+import com.example.izvorlocator.data.user.UserViewModel
 import com.example.izvorlocator.ui.theme.Background
+import com.google.android.gms.maps.model.LatLng
 
 @SuppressLint("DefaultLocale")
 @Composable
-fun AddPoiScreen(poiViewModel: PoiViewModel,
-                 navigateToMap: () -> Unit,
-                 editViewModel: EditViewModel = viewModel()) {
+fun UpdatePoiScreen(poiViewModel: PoiViewModel,
+                 editViewModel: EditViewModel = viewModel(),
+                 userViewModel: UserViewModel = viewModel()) {
 
-    // Auto-reset ViewModel when this Composable is disposed (e.g. on back press)
     DisposableEffect(Unit) {
         onDispose {
             editViewModel.reset()
         }
+    }
+
+    LaunchedEffect(Unit) {
+            val pom = poiViewModel.selectedPoi
+            editViewModel.pristupacnost = pom.pristupacnost
+            editViewModel.kvalitet = pom.kvalitet
+            editViewModel.vrsta = pom.vrsta
+            /*editViewModel.slike = pom.slike!!*/
+            /*TODO -- srediti slike*/
+            editViewModel.dodajLatLng(LatLng(pom.lat, pom.lng))
     }
 
     val multipleImagePickerLauncher = rememberLauncherForActivityResult(
@@ -53,11 +65,11 @@ fun AddPoiScreen(poiViewModel: PoiViewModel,
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
-            ){
+        ){
             ImageSwitcher(imageUris = imageUris)
             Spacer(modifier = Modifier.height(8.dp))
             SizedButtonComponent(
-                value = "Odaberi slike",
+                value = "Dodaj slike",
                 onButtonClicked = { multipleImagePickerLauncher.launch("image/*") },
                 width = 150.dp
             )
@@ -89,9 +101,10 @@ fun AddPoiScreen(poiViewModel: PoiViewModel,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
-        var selectedOptionIndex by remember { mutableStateOf(0) }
+        var selectedOptionIndex by remember { mutableStateOf(
+            if(editViewModel.kvalitet=="Pijaća") 0 else 1)
+        }
         val options = listOf("Pijaća", "Tehnička")
-        editViewModel.kvalitet = options[selectedOptionIndex]
         RadioButtonGroup(
             label = "Kvalitet vode",
             options = options,
@@ -103,9 +116,10 @@ fun AddPoiScreen(poiViewModel: PoiViewModel,
                 }
             }
         )
-        var selectedOptionIndex2 by remember { mutableStateOf(0) }
+        var selectedOptionIndex2 by remember { mutableStateOf(
+            if(editViewModel.kvalitet=="Česma") 0 else 1)
+        }
         val options2 = listOf("Česma", "Prirodni")
-        editViewModel.vrsta = options2[selectedOptionIndex2]
         RadioButtonGroup(
             label = "Vrsta izvora",
             options = options2,
@@ -119,35 +133,24 @@ fun AddPoiScreen(poiViewModel: PoiViewModel,
         )
         TextField2Component(
             labelValue = "Pristupačnost izvora",
-            onTextChanged = {editViewModel.pristupacnost = it },
-            isError = editViewModel.pristupacnostError)
+            onTextChanged = {editViewModel.pristupacnost = it
+                editViewModel.pristupacnostError = (it=="")},
+            isError = editViewModel.pristupacnostError,
+            value = editViewModel.pristupacnost)
         Spacer(modifier = Modifier.height(8.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ){
-            SizedButtonComponent(
-                value = stringResource(R.string.nazad),
-                onButtonClicked = {
-                    navigateToMap()
-                },
-                width = 150.dp)
-            Spacer(modifier = Modifier.width(12.dp))
-            SizedButtonComponent(
-                value = stringResource(R.string.dodaj_marker),
-                onButtonClicked = {
-                    poiViewModel.addPoi(
-                        pristupacnost = editViewModel.pristupacnost,
-                        vrsta = editViewModel.vrsta,
-                        kvalitet = editViewModel.kvalitet,
-                        slike = editViewModel.slike,
-                        lat = editViewModel.lat,
-                        lng = editViewModel.lng
-                    )
-                    editViewModel.reset()
-                    navigateToMap()
-                },
-                width = 150.dp)
-        }
+        ButtonComponent(
+            value = stringResource(R.string.izmeni_marker),
+            onButtonClicked = {
+                poiViewModel.editPoi(
+                    pristupacnost = editViewModel.pristupacnost,
+                    vrsta = editViewModel.vrsta,
+                    kvalitet = editViewModel.kvalitet,
+                    slike = editViewModel.slike
+                )
+                userViewModel.addPointsToUser(20)
+                editViewModel.reset()
+                AppRouter.popBackStack()
+            },
+            isEnabled = true)
     }
 }

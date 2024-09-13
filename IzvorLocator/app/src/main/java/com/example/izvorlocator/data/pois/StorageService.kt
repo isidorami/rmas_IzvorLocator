@@ -1,4 +1,4 @@
-package com.example.izvorlocator.data.maps
+package com.example.izvorlocator.data.pois
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query

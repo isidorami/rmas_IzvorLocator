@@ -44,7 +44,6 @@ import com.example.izvorlocator.ui.theme.Secondary
 fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
 
     val isLoading by remember { userViewModel.isLoading }
-    // Data fetching happens only once when the screen is first displayed
     LaunchedEffect(Unit) {
         userViewModel.fetchUser()
     }

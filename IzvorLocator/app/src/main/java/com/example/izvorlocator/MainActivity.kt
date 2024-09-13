@@ -5,9 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.example.izvorlocator.app.IzvorLocatorApp
-import com.example.izvorlocator.data.maps.PoiViewModel
-import com.example.izvorlocator.data.maps.PoiViewModelFactory
-import com.example.izvorlocator.data.maps.StorageService
+import com.example.izvorlocator.data.pois.PoiViewModel
+import com.example.izvorlocator.data.pois.PoiViewModelFactory
+import com.example.izvorlocator.data.pois.StorageService
 
 class MainActivity : ComponentActivity() {
     private val poiViewModel: PoiViewModel by viewModels {

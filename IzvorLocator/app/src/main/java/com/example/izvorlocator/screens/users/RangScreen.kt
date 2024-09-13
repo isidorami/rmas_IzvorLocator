@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.izvorlocator.components.CustomIndeterminateProgress
-import com.example.izvorlocator.data.user.UserList
+import com.example.izvorlocator.components.UserList
 import com.example.izvorlocator.data.user.UserViewModel
 
 @Composable

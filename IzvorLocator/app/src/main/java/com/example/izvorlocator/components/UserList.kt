@@ -1,9 +1,8 @@
-package com.example.izvorlocator.data.user
+package com.example.izvorlocator.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,13 +27,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
-import com.example.izvorlocator.components.NormalTextComponent
-import com.example.izvorlocator.components.ProfileInfoRow
-import com.example.izvorlocator.ui.theme.Primary
+import com.example.izvorlocator.data.user.UserPhotoUIState
 import com.example.izvorlocator.ui.theme.Secondary
 
 @Composable

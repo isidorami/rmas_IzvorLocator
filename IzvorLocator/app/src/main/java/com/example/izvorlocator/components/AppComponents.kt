@@ -61,7 +61,6 @@ fun ProfileInfoRow(icon: ImageVector, description: String, fontSize: TextUnit = 
             modifier = Modifier.size(24.dp)
         )
         Spacer(modifier = Modifier.width(8.dp))
-
         Text(
             text = description,
             modifier = Modifier
@@ -138,15 +137,12 @@ fun TextField2Component(
     labelValue: String,
     onTextChanged: (String) -> Unit,
     isError: Boolean,
-    singleLine: Boolean = true,
-    maxLines: Int = 1
+    value: String
 )
 {
-    val textValue = remember{ mutableStateOf("") }
     OutlinedTextField(
-        value = textValue.value,
+        value = value,
         onValueChange = {
-            textValue.value = it
             onTextChanged(it)
         },
         modifier = Modifier
@@ -161,77 +157,8 @@ fun TextField2Component(
             cursorColor = Primary,
         ),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-        singleLine = singleLine,
-        maxLines = maxLines,
         isError = isError
     )
-}
-
-@Composable
-fun RadioButtonComponent(
-    labelValue: String,
-    isSelected: Boolean,
-    onOptionSelected: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .background(Background)
-            .clip(componentShapes.small),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        RadioButton(
-            modifier = Modifier.height(40.dp),
-            selected = isSelected,
-            onClick = onOptionSelected,
-            colors = RadioButtonDefaults.colors(
-                selectedColor = colorResource(id = R.color.colorPrimary),
-                unselectedColor = Color.Gray
-            )
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = labelValue,
-            color = Color.Black,
-            modifier = Modifier.wrapContentWidth()
-        )
-    }
-}
-@Composable
-fun RadioButtonGroup(
-    label: String,
-    options: List<String>,
-    selectedOptionIndex: Int,
-    onOptionSelected: (Int) -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Background)
-            .clip(componentShapes.small)
-            .padding(6.dp)
-    ) {
-        Text(
-            text = label,
-            color = Primary
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Background)
-                .clip(componentShapes.small),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            options.forEachIndexed { index, option ->
-                RadioButtonComponent(
-                    labelValue = option,
-                    isSelected = index == selectedOptionIndex,
-                    onOptionSelected = { onOptionSelected(index) }
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-            }
-        }
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -297,6 +224,11 @@ fun ButtonComponent(
     onButtonClicked: () -> Unit,
     isEnabled: Boolean = false
 ){
+    var list = listOf(Accent, Secondary)
+    if(value == stringResource(R.string.delete)){
+        list = listOf(Color.Red,Color(0xFFFF6F6F))
+    }
+
     Button(onClick = {
         onButtonClicked.invoke()
     },
@@ -311,7 +243,7 @@ fun ButtonComponent(
             .fillMaxWidth()
             .heightIn(48.dp)
             .background(
-                brush = Brush.horizontalGradient(listOf(Accent, Secondary)),
+                brush = Brush.horizontalGradient(list),
                 shape = RoundedCornerShape(50.dp)
             ),
             contentAlignment = Alignment.Center
@@ -331,6 +263,10 @@ fun SizedButtonComponent(
     onButtonClicked: () -> Unit,
     width: Dp
 ){
+    var list = listOf(Accent, Secondary)
+    if(value == stringResource(R.string.obrisi_marker)){
+        list = listOf(Color.Red,Color(0xFFFF6F6F))
+    }
     Button(onClick = {
         onButtonClicked.invoke()
     },
@@ -344,7 +280,7 @@ fun SizedButtonComponent(
             .widthIn(width)
             .heightIn(48.dp)
             .background(
-                brush = Brush.horizontalGradient(listOf(Accent, Secondary)),
+                brush = Brush.horizontalGradient(list),
                 shape = RoundedCornerShape(50.dp)
             ),
             contentAlignment = Alignment.Center
@@ -463,8 +399,9 @@ fun CustomIndeterminateProgress(modifier: Modifier)
     )
 
     Box(
-        modifier = modifier.fillMaxSize()
-            .clickable{false},
+        modifier = modifier
+            .fillMaxSize()
+            .clickable { false },
         contentAlignment = Alignment.Center
     ) {
         Card(

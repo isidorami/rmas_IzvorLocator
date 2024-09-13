@@ -22,6 +22,7 @@ constraintlayout = "2.1.4"
 benchmarkMacro = "1.2.4"
 firebaseFirestore = "25.0.0"
 navigationCompose = "2.7.7"
+playServicesLocation = "21.3.0"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
@@ -53,6 +54,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-benchmark-macro = { group = "androidx.benchmark", name = "benchmark-macro", version.ref = "benchmarkMacro" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

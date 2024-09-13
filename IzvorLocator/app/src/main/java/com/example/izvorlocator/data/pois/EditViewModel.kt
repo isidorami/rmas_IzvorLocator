@@ -1,9 +1,8 @@
-package com.example.izvorlocator.data.maps
+package com.example.izvorlocator.data.pois
 
 import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -35,9 +34,9 @@ class EditViewModel: ViewModel() {
         lat = 0.0
         lng = 0.0
 
-        pristupacnostError = true
+        pristupacnostError = false
     }
     fun onImagesPicked(uri: List<Uri>) {
-        slike = uri
+        slike = slike + uri
     }
 }

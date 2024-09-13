@@ -1,6 +1,5 @@
 package com.example.izvorlocator.screens
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,12 +27,13 @@ import androidx.compose.ui.res.stringResource
 import com.example.izvorlocator.R
 import com.example.izvorlocator.app.AppRouter
 import com.example.izvorlocator.app.Screen
-import com.example.izvorlocator.data.maps.EditViewModel
-import com.example.izvorlocator.data.maps.PoiViewModel
+import com.example.izvorlocator.data.pois.EditViewModel
+import com.example.izvorlocator.data.pois.PoiViewModel
 import com.example.izvorlocator.data.user.UserViewModel
 import com.example.izvorlocator.screens.maps.AddPoiScreen
 import com.example.izvorlocator.screens.maps.ListScreen
 import com.example.izvorlocator.screens.maps.MapScreen
+import com.example.izvorlocator.screens.maps.UpdatePoiScreen
 import com.example.izvorlocator.screens.maps.ViewPoiScreen
 import com.example.izvorlocator.screens.users.ProfileScreen
 import com.example.izvorlocator.screens.users.RangScreen
@@ -127,7 +127,7 @@ fun NavScreen(
                         MapScreen(
                             onMapLongClick = { latLng ->
                                 editViewModel.dodajLatLng(latLng)
-                                AppRouter.navigateTo(Screen.AddScreen)
+                                AppRouter.navigateTo(Screen.AddPoiScreen)
                             },
                             list = poiList.value,
                             navigateToViewPoi = {
@@ -157,21 +157,21 @@ fun NavScreen(
                         ProfileScreen()
                     }
 
-                    is Screen.AddScreen -> {
+                    is Screen.AddPoiScreen -> {
                         AddPoiScreen(
-                            poiViewModel = poiViewModel,
-                            navigateToMap = {
-                                AppRouter.popBackStack() // Na MapScreen
-                            }
+                            poiViewModel = poiViewModel
                         )
                     }
 
                     is Screen.ViewPoiScreen -> {
                         ViewPoiScreen(
-                            poiViewModel = poiViewModel,
-                            navigateBack = {
-                                AppRouter.popBackStack() // Na MapScreen
-                            }
+                            poiViewModel = poiViewModel
+                        )
+                    }
+
+                    is Screen.UpdatePoiScreen -> {
+                        UpdatePoiScreen(
+                            poiViewModel = poiViewModel
                         )
                     }
 

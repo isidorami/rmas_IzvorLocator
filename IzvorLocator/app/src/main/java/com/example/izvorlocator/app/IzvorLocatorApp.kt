@@ -6,9 +6,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.ViewModel
-import com.example.izvorlocator.data.maps.PoiViewModel
-import com.example.izvorlocator.data.maps.PoiViewModelFactory
+import com.example.izvorlocator.data.pois.PoiViewModel
 import com.example.izvorlocator.screens.users.ForgotPasswordScreen
 import com.example.izvorlocator.screens.users.LoginScreen
 import com.example.izvorlocator.screens.NavScreen
