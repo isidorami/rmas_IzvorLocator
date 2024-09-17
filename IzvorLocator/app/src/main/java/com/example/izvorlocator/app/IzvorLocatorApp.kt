@@ -1,14 +1,11 @@
 package com.example.izvorlocator.app
 
-import android.content.Context
-import android.content.Intent
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.example.izvorlocator.data.location.LocationService
 import com.example.izvorlocator.data.pois.PoiViewModel
 import com.example.izvorlocator.screens.users.ForgotPasswordScreen
 import com.example.izvorlocator.screens.users.LoginScreen
@@ -16,10 +13,7 @@ import com.example.izvorlocator.screens.NavScreen
 import com.example.izvorlocator.screens.users.RegisterScreen
 
 @Composable
-fun IzvorLocatorApp(poiViewModel: PoiViewModel,
-                    context: Context,
-                    startLocationService: Intent,
-                    stopLocationService: Intent){
+fun IzvorLocatorApp(poiViewModel: PoiViewModel){
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Color.White
@@ -36,10 +30,7 @@ fun IzvorLocatorApp(poiViewModel: PoiViewModel,
                     ForgotPasswordScreen()
                 }
                 else -> {
-                    NavScreen(poiViewModel = poiViewModel,
-                        context = context,
-                        startLocationService,
-                        stopLocationService)
+                    NavScreen(poiViewModel)
                 }
             }
         }

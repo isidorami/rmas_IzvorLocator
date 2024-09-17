@@ -40,12 +40,6 @@ fun ViewPoiScreen(poiViewModel: PoiViewModel,
     {
         PoiCard(poi = poiViewModel.selectedPoi)
         Row {
-            /*SizedButtonComponent(
-                value = stringResource(R.string.nazad),
-                onButtonClicked = {
-                    AppRouter.popBackStack()
-                },
-                width = 150.dp)*/
             SizedButtonComponent(
                 value = stringResource(R.string.izmeni_marker),
                 onButtonClicked = {

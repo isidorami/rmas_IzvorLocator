@@ -8,8 +8,6 @@ import android.content.Intent
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.izvorlocator.MainActivity
 import com.example.izvorlocator.R
 import com.example.izvorlocator.data.pois.Poi
@@ -29,7 +27,7 @@ class LocationService: Service() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private lateinit var locationClient: LocationClient
 
-    private val storageService = StorageServiceSingleton.getInstance() // Use the singleton
+    private val storageService = StorageServiceSingleton.getInstance()
 
     override fun onBind(p0: Intent?): IBinder? {
         return null
@@ -41,55 +39,62 @@ class LocationService: Service() {
             applicationContext,
             LocationServices.getFusedLocationProviderClient(applicationContext)
         )
+        startForegroundService()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        when(intent?.action) {
-            ACTION_START ->startLocationTracking()
-            ACTION_STOP -> stop()
+        Log.d("proba", "onStartCommand called with action: ${intent?.action}")
+        when (intent?.action) {
+            ACTION_START -> {
+                Log.d("proba", "Starting location tracking")
+                startLocationTracking()
+            }
+            ACTION_STOP -> {
+                Log.d("proba", "Stopping location tracking")
+                stop()
+            }
         }
-        return super.onStartCommand(intent, flags, startId)
+        return START_STICKY
     }
 
     private fun startLocationTracking() {
-        Log.d("proba", "usli u start tracking")
         serviceScope.launch {
+            locationClient.getLocationUpdates(1000L)
+                .catch { e -> e.printStackTrace() }
+                .onEach { location ->
+                    val lat = location.latitude
+                    val lng = location.longitude
+
+                    Log.d("proba", "TRENUTNA LOKACIJA")
+                    LocationTracker.updateLocation(lat, lng)
+
+                    // Ako je servis aktivan
+                    if (LocationTracker.isServiceRunning.value) {
+                        checkProximityToMarkers(lat, lng)
+                    }
+                }
+                .launchIn(serviceScope)
+        }
+    }
+
+    private fun checkProximityToMarkers(lat: Double, lng: Double) {
+        Log.d("proba", "usli u checkProximityToMarkers")
+        serviceScope.launch {
+            // Dohvati POI listu iz skladišta podataka
             storageService.pois
                 .catch { e -> e.printStackTrace() }
                 .collect { poiList ->
-                    locationClient.getLocationUpdates(10000L)
-                        .catch { e -> e.printStackTrace() }
-                        .onEach { location ->
-                            val lat = location.latitude
-                            val lng = location.longitude
-                            checkProximityToMarkers(lat, lng, poiList)
-
-                            broadcastLocation(lat, lng)
+                    poiList.forEach { marker ->
+                        val distance = calculateDistance(lat, lng, marker.lat, marker.lng)
+                        if (distance < PROXIMITY_THRESHOLD) {
+                            sendProximityNotification(marker)
                         }
-                        .launchIn(serviceScope)
+                    }
                 }
         }
     }
 
-    private fun broadcastLocation(lat: Double, lng: Double) {
-        val intent = Intent("LOCATION_UPDATE")
-        intent.putExtra("latitude", lat)
-        intent.putExtra("longitude", lng)
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
-    }
-
-    private fun checkProximityToMarkers(lat: Double, lng: Double, poiList: List<Poi>) {
-        Log.d("proba", "usli u check")
-        poiList.forEach { marker ->
-            val distance = calculateDistance(lat, lng, marker.lat, marker.lng)
-            if (distance < PROXIMITY_THRESHOLD) {
-                sendProximityNotification(marker)
-            }
-        }
-    }
-
     private fun calculateDistance(lat1: Double, lng1: Double, lat2: Double, lng2: Double): Float {
-        Log.d("proba", "usli u distance")
         val results = FloatArray(1)
         android.location.Location.distanceBetween(lat1, lng1, lat2, lng2, results)
         return results[0]
@@ -122,8 +127,20 @@ class LocationService: Service() {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(2, notification)
     }
+    private fun startForegroundService() {
+        Log.d("proba", "Starting foreground service")
+        val notification = NotificationCompat.Builder(this, "location")
+            .setContentTitle("Praćenje lokacije...")
+            .setContentText("Aplikacija u pozadini prati vašu lokaciju.")
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .build()
+
+        startForeground(1, notification)
+    }
 
     private fun stop() {
+        Log.d("proba", "usli u STOP")
         stopForeground(true)
         stopSelf()
     }

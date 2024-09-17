@@ -26,7 +26,7 @@ import com.example.izvorlocator.data.location.LocationService
 
 class MainActivity : ComponentActivity() {
     private val poiViewModel: PoiViewModel by viewModels {
-        PoiViewModelFactory(/*StorageService((application as PoiApplication).db)*/)
+        PoiViewModelFactory()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,16 +39,14 @@ class MainActivity : ComponentActivity() {
             ),
             0
         )
-        val startLocationService = Intent(applicationContext, LocationService::class.java).apply {
+        // pokretanje LocationService
+        val startLocationService = Intent(this, LocationService::class.java).apply {
             action = LocationService.ACTION_START
-            startService(this)
         }
-        val stopLocationService = Intent(applicationContext, LocationService::class.java).apply {
-            action = LocationService.ACTION_STOP
-            startService(this)
-        }
+        startService(startLocationService)
+
         setContent {
-            IzvorLocatorApp(poiViewModel, context = this, startLocationService, stopLocationService)
+            IzvorLocatorApp(poiViewModel)
         }
     }
 }

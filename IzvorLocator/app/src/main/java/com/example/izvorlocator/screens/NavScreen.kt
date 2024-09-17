@@ -1,22 +1,9 @@
 package com.example.izvorlocator.screens
 
-import android.content.Context
-import android.content.Intent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -44,9 +31,6 @@ import com.example.izvorlocator.screens.users.RangScreen
 @Composable
 fun NavScreen(
     poiViewModel: PoiViewModel,
-    context: Context,
-    startLocationService: Intent,
-    stopLocationService: Intent,
     userViewModel: UserViewModel = viewModel(),
     editViewModel: EditViewModel = viewModel()
 ) {
@@ -186,7 +170,7 @@ fun NavScreen(
                     }
 
                     is Screen.SettingsScreen -> {
-                        SettingsScreen(context, startLocationService, stopLocationService)
+                        SettingsScreen()
                     }
 
                     else -> { }
