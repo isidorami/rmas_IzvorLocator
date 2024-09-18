@@ -6,10 +6,13 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -51,12 +54,17 @@ fun AddPoiScreen(poiViewModel: PoiViewModel,
         editViewModel.onImagesPicked(uris)
     }
     val imageUris = editViewModel.slike
-
+    val focusManager = LocalFocusManager.current
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(Background)
-            .padding(18.dp),
+            .padding(18.dp)
+            .clickable (
+                onClick = { focusManager.clearFocus() },
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
@@ -128,7 +136,7 @@ fun AddPoiScreen(poiViewModel: PoiViewModel,
                 }
             }
         )
-        TextField2Component(
+        PristupacnostTextFieldComponent(
             labelValue = "Pristupačnost izvora",
             onTextChanged = {editViewModel.pristupacnost = it
                 editViewModel.pristupacnostError = (it.length<3) },

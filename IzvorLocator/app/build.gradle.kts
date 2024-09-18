@@ -100,4 +100,6 @@ dependencies {
     implementation("com.google.maps.android:maps-compose-widgets:$mapsComposeVersion")
 
     implementation("com.google.android.gms:play-services-location:21.3.0")
+
+    implementation("androidx.compose.material:material:1.5.0")
 }

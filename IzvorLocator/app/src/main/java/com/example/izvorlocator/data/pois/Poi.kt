@@ -16,4 +16,8 @@ data class Poi(
     val lat: Double = 0.0,
     val lng: Double = 0.0,
     val visitors: List<String> = emptyList<String>() //pamti u bazi koji korisnici su ga obisli
-)
+) {
+    fun doesMatchSearchQuery(searchText: String): Boolean {
+        return this.pristupacnost.contains(searchText, ignoreCase = true)
+    }
+}

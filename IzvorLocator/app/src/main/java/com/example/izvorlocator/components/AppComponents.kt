@@ -133,7 +133,7 @@ fun TextFieldComponent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TextField2Component(
+fun PristupacnostTextFieldComponent(
     labelValue: String,
     onTextChanged: (String) -> Unit,
     isError: Boolean,
@@ -156,7 +156,7 @@ fun TextField2Component(
             focusedLabelColor = Primary,
             cursorColor = Primary,
         ),
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         isError = isError
     )
 }
@@ -264,7 +264,7 @@ fun SizedButtonComponent(
     width: Dp
 ){
     var list = listOf(Accent, Secondary)
-    if(value == stringResource(R.string.obrisi_marker)){
+    if(value == stringResource(R.string.obrisi_marker) || value == "Resetuj filtere"){
         list = listOf(Color.Red,Color(0xFFFF6F6F))
     }
     Button(onClick = {
