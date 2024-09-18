@@ -27,8 +27,7 @@ import com.google.android.gms.maps.model.LatLng
 @SuppressLint("DefaultLocale")
 @Composable
 fun UpdatePoiScreen(poiViewModel: PoiViewModel,
-                 editViewModel: EditViewModel = viewModel(),
-                 userViewModel: UserViewModel = viewModel()) {
+                 editViewModel: EditViewModel = viewModel()) {
 
     DisposableEffect(Unit) {
         onDispose {
@@ -133,22 +132,24 @@ fun UpdatePoiScreen(poiViewModel: PoiViewModel,
         TextField2Component(
             labelValue = "Pristupačnost izvora",
             onTextChanged = {editViewModel.pristupacnost = it
-                editViewModel.pristupacnostError = (it=="")},
+                editViewModel.pristupacnostError = (it.length<3)},
             isError = editViewModel.pristupacnostError,
             value = editViewModel.pristupacnost)
         Spacer(modifier = Modifier.height(8.dp))
         ButtonComponent(
             value = stringResource(R.string.izmeni_marker),
             onButtonClicked = {
-                poiViewModel.editPoi(
-                    pristupacnost = editViewModel.pristupacnost,
-                    vrsta = editViewModel.vrsta,
-                    kvalitet = editViewModel.kvalitet,
-                    slike = editViewModel.slike
-                )
-                userViewModel.addPointsToUser(20)
-                editViewModel.reset()
-                AppRouter.popBackStack()
+                if(editViewModel.pristupacnost.isNotEmpty()) {
+                    poiViewModel.editPoi(
+                        pristupacnost = editViewModel.pristupacnost,
+                        vrsta = editViewModel.vrsta,
+                        kvalitet = editViewModel.kvalitet,
+                        slike = editViewModel.slike
+                    )
+                    UserViewModel.addPointsToUser(20)
+                    editViewModel.reset()
+                    AppRouter.popBackStack()
+                }
             },
             isEnabled = true)
     }

@@ -12,7 +12,9 @@ import com.example.izvorlocator.MainActivity
 import com.example.izvorlocator.R
 import com.example.izvorlocator.data.pois.Poi
 import com.example.izvorlocator.data.pois.StorageServiceSingleton
+import com.example.izvorlocator.data.user.UserViewModel
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -42,6 +44,18 @@ class LocationService: Service() {
         startForegroundService()
     }
 
+    private fun startForegroundService() {
+        //Log.d("proba", "Starting foreground service")
+        val notification = NotificationCompat.Builder(this, "location")
+            .setContentTitle("Praćenje lokacije...")
+            .setContentText("Aplikacija u pozadini prati vašu lokaciju.")
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .build()
+
+        startForeground(1, notification)
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("proba", "onStartCommand called with action: ${intent?.action}")
         when (intent?.action) {
@@ -68,8 +82,7 @@ class LocationService: Service() {
                     //Log.d("proba", "TRENUTNA LOKACIJA")
                     LocationTracker.updateLocation(lat, lng)
 
-                    // Ako je servis aktivan
-                    if (LocationTracker.isServiceRunning.value) {
+                    if(LocationTracker.isServiceRunning.value) {
                         checkProximityToMarkers(lat, lng)
                     }
                 }
@@ -88,6 +101,10 @@ class LocationService: Service() {
                         val distance = calculateDistance(lat, lng, marker.lat, marker.lng)
                         if (distance < PROXIMITY_THRESHOLD) {
                             sendProximityNotification(marker)
+                            if(distance==0f){
+                                val uid = FirebaseAuth.getInstance().currentUser?.uid.toString()
+                                visitPoi(marker.id, uid)
+                            }
                         }
                     }
                 }
@@ -116,30 +133,48 @@ class LocationService: Service() {
 
         val notification = NotificationCompat.Builder(this, "location")
             .setContentTitle("Izvor je u blizini!")
-            .setContentText("Izvor na lokaciji (${marker.lat}, ${marker.lng})")
+            .setContentText("Na lokaciji (${marker.lat}, ${marker.lng}) postoji izvor.")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setOngoing(false)
             .setContentIntent(pendingIntent) // otvori aplikaciju
-            .setAutoCancel(true) // i skloni notifikaciju
             .build()
 
         // prikazi notifikaciju preko menadzera
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(2, notification)
     }
-    private fun startForegroundService() {
-        //Log.d("proba", "Starting foreground service")
-        val notification = NotificationCompat.Builder(this, "location")
-            .setContentTitle("Praćenje lokacije...")
-            .setContentText("Aplikacija u pozadini prati vašu lokaciju.")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .build()
 
-        startForeground(1, notification)
+    private suspend fun visitPoi(id: String, visitor: String) {
+        //Log.d("proba", "usli u visit poi!!!")
+        val p : Poi? = storageService.getPoi(id)
+        if(p!=null){
+            if(p.korisnikId==visitor || p.visitors.contains(visitor)){
+                //Log.d("proba", "Korisnik kreirao ili vec obisao lokaciju!")
+                return
+            }
+            else {
+                val totalVisitors = p.visitors + visitor
+                Log.d("proba", "Dodali visitora: $totalVisitors")
+                val p2 = Poi(
+                    id = p.id,
+                    pristupacnost = p.pristupacnost,
+                    vrsta = p.vrsta,
+                    kvalitet = p.kvalitet,
+                    korisnikId = p.korisnikId,
+                    korisnikImePrezime = p.korisnikImePrezime,
+                    lat = p.lat,
+                    lng = p.lng,
+                    visitors = totalVisitors
+                )
+                storageService.update(p2)
+                // ako prvi put obilazi lokaciju dobija poene, posle toga ne
+                UserViewModel.addPointsToUser(50)
+            }
+        }
     }
 
     private fun stop() {
+        Log.d("proba", "USLI U STOP!")
         stopForeground(true)
         stopSelf()
     }
@@ -152,6 +187,6 @@ class LocationService: Service() {
     companion object {
         const val ACTION_START = "ACTION_START"
         const val ACTION_STOP = "ACTION_STOP"
-        const val PROXIMITY_THRESHOLD = 100f // 100 metara
+        const val PROXIMITY_THRESHOLD = 20f // 20 metara
     }
 }

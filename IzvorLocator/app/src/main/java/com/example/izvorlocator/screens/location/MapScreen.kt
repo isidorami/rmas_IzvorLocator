@@ -55,7 +55,7 @@ fun MapScreen(
 
             GoogleMap(
                 modifier = Modifier.fillMaxSize(),
-                cameraPositionState = cameraPositionState
+                cameraPositionState = cameraPositionState,
             ) {
                 list.forEach { poi ->
                     Marker(

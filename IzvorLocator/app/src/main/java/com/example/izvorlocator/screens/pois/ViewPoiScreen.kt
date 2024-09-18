@@ -2,6 +2,9 @@ package com.example.izvorlocator.screens.pois
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,6 +16,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,14 +33,17 @@ import com.example.izvorlocator.app.Screen
 import com.example.izvorlocator.components.DividerTextComponent
 import com.example.izvorlocator.components.ImageSwitcher
 import com.example.izvorlocator.components.SizedButtonComponent
+import com.example.izvorlocator.components.UserList
 import com.example.izvorlocator.data.pois.PoiViewModel
 import com.example.izvorlocator.data.pois.Poi
 import com.example.izvorlocator.data.user.UserViewModel
 import com.example.izvorlocator.ui.theme.Background
+import com.google.firebase.database.FirebaseDatabase
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
-fun ViewPoiScreen(poiViewModel: PoiViewModel,
-                  userViewModel: UserViewModel = viewModel()) {
+fun ViewPoiScreen(poiViewModel: PoiViewModel) {
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -52,7 +62,7 @@ fun ViewPoiScreen(poiViewModel: PoiViewModel,
             SizedButtonComponent(
                 value = stringResource(R.string.obrisi_marker),
                 onButtonClicked = {
-                    userViewModel.addPointsToUser(10)
+                    UserViewModel.addPointsToUser(10)
                     poiViewModel.deletePoi(poiViewModel.selectedPoi.id)
                     AppRouter.popBackStack()
                 },
@@ -65,6 +75,7 @@ fun ViewPoiScreen(poiViewModel: PoiViewModel,
 @Composable
 fun PoiCard(poi: Poi,
             imageUris: List<Uri>) {
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -158,6 +169,34 @@ fun PoiCard(poi: Poi,
                     text = poi.pristupacnost,
                     fontSize = 18.sp,
                     modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Row {
+                Text(
+                    text = "Poslednja izmena:",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = poi.createdAt.date.toString()+"."+poi.createdAt.month.toString()+". u "
+                            +poi.createdAt.hours.toString()+":"+poi.createdAt.minutes.toString(),
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Row {
+                Text(
+                    text = "Kreirao korisnik:",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = poi.korisnikImePrezime,
+                    fontSize = 18.sp,
                 )
             }
         }

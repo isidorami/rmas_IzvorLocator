@@ -72,6 +72,8 @@ class PoiViewModel(private val storageService: StorageService): ViewModel() {
         vrsta: String,
         kvalitet: String,
         slike: List<Uri>,
+        korisnikId: String,
+        korisnikImePrezime: String,
         lat: Double,
         lng: Double
     ) {
@@ -79,6 +81,8 @@ class PoiViewModel(private val storageService: StorageService): ViewModel() {
             pristupacnost = pristupacnost,
             vrsta = vrsta,
             kvalitet = kvalitet,
+            korisnikId = korisnikId,
+            korisnikImePrezime = korisnikImePrezime,
             lat = lat,
             lng = lng
         )
@@ -102,8 +106,11 @@ class PoiViewModel(private val storageService: StorageService): ViewModel() {
                 pristupacnost = pristupacnost,
                 vrsta = vrsta,
                 kvalitet = kvalitet,
+                korisnikId = selectedPoi.korisnikId,
+                korisnikImePrezime = selectedPoi.korisnikImePrezime,
                 lat = selectedPoi.lat,
-                lng = selectedPoi.lng
+                lng = selectedPoi.lng,
+                visitors = selectedPoi.visitors
             )
             storageService.update(p)
             uploadImagesToFirebase(p.id, slike) //dodajemo još slika, ne brišu se stare
@@ -111,6 +118,28 @@ class PoiViewModel(private val storageService: StorageService): ViewModel() {
             selectedPoi = p
         }
     }
+
+    /*fun visitPoi(id: String, visitor: String) {
+        viewModelScope.launch {
+            val p : Poi? = storageService.getPoi(id)
+            if(p!=null){
+                val addedVisitors = p.visitors+visitor
+                Log.d("proba", "Dodali visitora: ${addedVisitors}")
+                val p2 = Poi(
+                    id = p.id,
+                    pristupacnost = p.pristupacnost,
+                    vrsta = p.vrsta,
+                    kvalitet = p.kvalitet,
+                    korisnikId = p.korisnikId,
+                    korisnikImePrezime = p.korisnikImePrezime,
+                    lat = p.lat,
+                    lng = p.lng,
+                    visitors = addedVisitors
+                )
+                storageService.update(p2)
+            }
+        }
+    }*/
 
     private fun uploadImagesToFirebase(poiId: String, imageUris: List<Uri>) {
         val storage = FirebaseStorage.getInstance()

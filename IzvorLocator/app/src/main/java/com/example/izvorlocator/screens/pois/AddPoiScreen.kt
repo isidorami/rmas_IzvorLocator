@@ -2,6 +2,7 @@ package com.example.izvorlocator.screens.pois
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -21,17 +22,26 @@ import com.example.izvorlocator.data.pois.EditViewModel
 import com.example.izvorlocator.data.pois.PoiViewModel
 import com.example.izvorlocator.data.user.UserViewModel
 import com.example.izvorlocator.ui.theme.Background
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
 @SuppressLint("DefaultLocale")
 @Composable
 fun AddPoiScreen(poiViewModel: PoiViewModel,
-                 editViewModel: EditViewModel = viewModel(),
-                 userViewModel: UserViewModel = viewModel()) {
+                 editViewModel: EditViewModel = viewModel()) {
 
-    // Auto-reset ViewModel when this Composable is disposed (e.g. on back press)
     DisposableEffect(Unit) {
         onDispose {
             editViewModel.reset()
+        }
+    }
+
+    var userNameSurname by remember { mutableStateOf("") }
+    val uid = FirebaseAuth.getInstance().currentUser?.uid.toString()
+
+    LaunchedEffect(Unit) {
+        UserViewModel.fetchUserNameAndSurname(uid) { fetchedNameSurname ->
+            userNameSurname = fetchedNameSurname
         }
     }
 
@@ -121,24 +131,29 @@ fun AddPoiScreen(poiViewModel: PoiViewModel,
         TextField2Component(
             labelValue = "Pristupačnost izvora",
             onTextChanged = {editViewModel.pristupacnost = it
-                editViewModel.pristupacnostError = (it=="") },
+                editViewModel.pristupacnostError = (it.length<3) },
             isError = editViewModel.pristupacnostError,
             value = editViewModel.pristupacnost)
         Spacer(modifier = Modifier.height(8.dp))
             ButtonComponent(
                 value = stringResource(R.string.dodaj_marker),
                 onButtonClicked = {
-                    poiViewModel.addPoi(
-                        pristupacnost = editViewModel.pristupacnost,
-                        vrsta = editViewModel.vrsta,
-                        kvalitet = editViewModel.kvalitet,
-                        slike = editViewModel.slike,
-                        lat = editViewModel.lat,
-                        lng = editViewModel.lng
-                    )
-                    userViewModel.addPointsToUser(30)
-                    editViewModel.reset()
-                    AppRouter.popBackStack()
+                    if(editViewModel.pristupacnost.isNotEmpty() && imageUris.isNotEmpty()) {
+                        Log.d("proba", "snima se novi poi")
+                        poiViewModel.addPoi(
+                            pristupacnost = editViewModel.pristupacnost,
+                            vrsta = editViewModel.vrsta,
+                            kvalitet = editViewModel.kvalitet,
+                            slike = editViewModel.slike,
+                            korisnikId = uid,
+                            korisnikImePrezime = userNameSurname,
+                            lat = editViewModel.lat,
+                            lng = editViewModel.lng
+                        )
+                        UserViewModel.addPointsToUser(30)
+                        editViewModel.reset()
+                        AppRouter.popBackStack()
+                    }
                 },
                 isEnabled = true)
     }
