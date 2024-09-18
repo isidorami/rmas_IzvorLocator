@@ -39,7 +39,7 @@ fun ImageSwitcher(imageUris: List<Uri>) {
         horizontalArrangement = Arrangement.Center
     ){
         IconButton(
-            onClick = { if (currentIndex > 0) currentIndex-- },
+            onClick = { if (currentIndex > 0) currentIndex-- else currentIndex = imageUris.size - 1},
             modifier = Modifier.size(40.dp)
         ) {
             Icon(
@@ -61,7 +61,7 @@ fun ImageSwitcher(imageUris: List<Uri>) {
         )
         Spacer(modifier = Modifier.width(8.dp))
         IconButton(
-            onClick = { if (currentIndex < imageUris.size - 1) currentIndex++ },
+            onClick = { if (currentIndex < imageUris.size - 1) currentIndex++ else currentIndex = 0},
             modifier = Modifier.size(40.dp)
         ) {
             Icon(

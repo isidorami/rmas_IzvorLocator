@@ -21,9 +21,44 @@ import kotlinx.coroutines.launch
 class PoiViewModel(private val storageService: StorageService): ViewModel() {
     var selectedPoi: Poi by mutableStateOf(Poi())
         private set
+    var selectedPoiImages: List<Uri> by mutableStateOf(emptyList())
+        private set
 
     fun setCurrentPoi(poi: Poi) {
         selectedPoi = poi
+        fetchImagesFromFirebase(poi.id) { images ->
+            selectedPoiImages = images
+        }
+    }
+
+    private fun fetchImagesFromFirebase(poiId: String, onImagesFetched: (List<Uri>) -> Unit) {
+        val storageReference = FirebaseStorage.getInstance().getReference("Pois/$poiId")
+
+        storageReference.listAll()
+            .addOnSuccessListener { result ->
+                val allFiles = result.items
+                val imageUris = mutableListOf<Uri>()
+                val tasks = mutableListOf<Task<Uri>>()
+
+                allFiles.forEach { fileReference ->
+                    val downloadUrlTask = fileReference.downloadUrl
+                    tasks.add(downloadUrlTask)
+                    downloadUrlTask.addOnSuccessListener { uri ->
+                        imageUris.add(uri)
+                        Log.d("proba", "Added image URL: $uri")
+                    }.addOnFailureListener { exception ->
+                        Log.d("proba", "Failed to get download URL for ${fileReference.name}: ${exception.message}")
+                    }
+                }
+
+                Tasks.whenAllSuccess<Uri>(tasks).addOnCompleteListener {
+                    Log.d("proba", "Successfully fetched ${imageUris.size} images")
+                    onImagesFetched(imageUris)
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("proba", "Failed to list files: ${exception.message}")
+            }
     }
 
     fun resetCurrentPoi() {
@@ -48,14 +83,15 @@ class PoiViewModel(private val storageService: StorageService): ViewModel() {
             lng = lng
         )
         viewModelScope.launch {
-            storageService.save(p)
-            uploadImagesToFirebase(slike)
+            val id = storageService.save(p)
+            uploadImagesToFirebase(id, slike)
         }
     }
 
     fun deletePoi(id: String) {
         viewModelScope.launch {
             storageService.delete(id)
+            /*TODO: BRISANJE SLIKA*/
         }
     }
 
@@ -69,30 +105,27 @@ class PoiViewModel(private val storageService: StorageService): ViewModel() {
                 lat = selectedPoi.lat,
                 lng = selectedPoi.lng
             )
-            uploadImagesToFirebase(slike) //dodajemo još slika, ne brišu se stare
-            selectedPoi = p
             storageService.update(p)
+            uploadImagesToFirebase(p.id, slike) //dodajemo još slika, ne brišu se stare
+            selectedPoiImages = slike
+            selectedPoi = p
         }
     }
 
-    private fun uploadImagesToFirebase(imageUris: List<Uri>) {
+    private fun uploadImagesToFirebase(poiId: String, imageUris: List<Uri>) {
         val storage = FirebaseStorage.getInstance()
-        val storageReference = storage.getReference("Pois/${selectedPoi.id}")
+        val storageReference = storage.getReference("Pois").child(poiId)
 
-        // Use a Counter to Track the Number of Successful Uploads
         var successfulUploads = 0
         val totalUploads = imageUris.size
 
-        // Function to handle upload completion
         fun onUploadComplete() {
             successfulUploads++
             if (successfulUploads == totalUploads) {
-                // All images uploaded successfully
-                AppRouter.navigateTo(Screen.LoginScreen)
+                Log.d("proba", "uspesno dodate sve slike!")
             }
         }
 
-        // Iterate over the list of image URIs
         imageUris.forEach { imageUri ->
             val imageReference = storageReference.child("image_${System.currentTimeMillis()}")
 

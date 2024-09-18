@@ -41,8 +41,7 @@ fun UpdatePoiScreen(poiViewModel: PoiViewModel,
             editViewModel.pristupacnost = pom.pristupacnost
             editViewModel.kvalitet = pom.kvalitet
             editViewModel.vrsta = pom.vrsta
-            /*editViewModel.slike = pom.slike!!*/
-            /*TODO -- srediti slike*/
+            editViewModel.slike = poiViewModel.selectedPoiImages
             editViewModel.dodajLatLng(LatLng(pom.lat, pom.lng))
     }
 

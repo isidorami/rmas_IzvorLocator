@@ -65,7 +65,7 @@ class LocationService: Service() {
                     val lat = location.latitude
                     val lng = location.longitude
 
-                    Log.d("proba", "TRENUTNA LOKACIJA")
+                    //Log.d("proba", "TRENUTNA LOKACIJA")
                     LocationTracker.updateLocation(lat, lng)
 
                     // Ako je servis aktivan
@@ -78,7 +78,7 @@ class LocationService: Service() {
     }
 
     private fun checkProximityToMarkers(lat: Double, lng: Double) {
-        Log.d("proba", "usli u checkProximityToMarkers")
+        //Log.d("proba", "usli u checkProximityToMarkers")
         serviceScope.launch {
             // Dohvati POI listu iz skladišta podataka
             storageService.pois
@@ -101,7 +101,7 @@ class LocationService: Service() {
     }
 
     private fun sendProximityNotification(marker: Poi) {
-        Log.d("proba", "usli u notification")
+        //Log.d("proba", "usli u notification")
 
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -128,7 +128,7 @@ class LocationService: Service() {
         notificationManager.notify(2, notification)
     }
     private fun startForegroundService() {
-        Log.d("proba", "Starting foreground service")
+        //Log.d("proba", "Starting foreground service")
         val notification = NotificationCompat.Builder(this, "location")
             .setContentTitle("Praćenje lokacije...")
             .setContentText("Aplikacija u pozadini prati vašu lokaciju.")
@@ -140,7 +140,6 @@ class LocationService: Service() {
     }
 
     private fun stop() {
-        Log.d("proba", "usli u STOP")
         stopForeground(true)
         stopSelf()
     }

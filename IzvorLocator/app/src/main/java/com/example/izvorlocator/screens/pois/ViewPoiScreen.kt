@@ -1,6 +1,7 @@
 package com.example.izvorlocator.screens.pois
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,7 +39,8 @@ fun ViewPoiScreen(poiViewModel: PoiViewModel,
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally)
     {
-        PoiCard(poi = poiViewModel.selectedPoi)
+        PoiCard(poi = poiViewModel.selectedPoi,
+            imageUris = poiViewModel.selectedPoiImages)
         Row {
             SizedButtonComponent(
                 value = stringResource(R.string.izmeni_marker),
@@ -61,7 +63,8 @@ fun ViewPoiScreen(poiViewModel: PoiViewModel,
 
 @SuppressLint("DefaultLocale")
 @Composable
-fun PoiCard(poi: Poi) {
+fun PoiCard(poi: Poi,
+            imageUris: List<Uri>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -79,7 +82,7 @@ fun PoiCard(poi: Poi) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ImageSwitcher(imageUris = emptyList())
+                ImageSwitcher(imageUris = imageUris)
             }
             Spacer(modifier = Modifier.height(20.dp))
             Column(modifier = Modifier
