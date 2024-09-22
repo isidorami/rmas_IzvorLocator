@@ -17,8 +17,6 @@ import com.example.izvorlocator.data.user.UserUIState
 
 class RegisterViewModel : ViewModel(){
 
-    private var tag = RegisterViewModel::class.simpleName
-
     var registerUIState = mutableStateOf(RegisterUIState())
     var allValidationsPassed = mutableStateOf(false)
     var isLoading = mutableStateOf(false)
@@ -104,16 +102,16 @@ class RegisterViewModel : ViewModel(){
         FirebaseAuth.getInstance()
             .createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener{
-                Log.d(tag,"IN COMPLETE LISTENER -> FIREBASE")
-                Log.d(tag,"${it.isSuccessful}")
+                Log.d("proba","IN COMPLETE LISTENER -> FIREBASE")
+                Log.d("proba","${it.isSuccessful}")
                 if(it.isSuccessful){
                     isLoading.value = true
                     storeUserInDatabase(firstName,lastName,email,phone)
                 }
             }
             .addOnFailureListener{
-                Log.d(tag,"IN FAILURE LISTENER -> NOT CREATED USER IN FIREBASE")
-                Log.d(tag,"${it.message}")
+                Log.d("proba","IN FAILURE LISTENER -> NOT CREATED USER IN FIREBASE")
+                Log.d("proba","${it.message}")
                 isLoading.value=false
             }
     }
@@ -126,8 +124,8 @@ class RegisterViewModel : ViewModel(){
         if(uid != null) {
             databaseReference.child(uid).setValue(userUIState)
                 .addOnCompleteListener{
-                    Log.d(tag,"IN COMPLETE LISTENER -> USER IN DATABASE")
-                    Log.d(tag,"${it.isSuccessful}")
+                    Log.d("proba","IN COMPLETE LISTENER -> USER IN DATABASE")
+                    Log.d("proba","${it.isSuccessful}")
                     if(it.isSuccessful){
                         isLoading.value = true
                         val uriToUpload = _imageUri.value ?: Uri.parse("android.resource://com.example.izvorlocator/drawable/profile_photo")
@@ -135,8 +133,8 @@ class RegisterViewModel : ViewModel(){
                     }
                 }
                 .addOnFailureListener{
-                    Log.d(tag,"IN FAILURE LISTENER -> NOT STORED USER IN DATABASE")
-                    Log.d(tag,"${it.message}")
+                    Log.d("proba","IN FAILURE LISTENER -> NOT STORED USER IN DATABASE")
+                    Log.d("proba","${it.message}")
                     isLoading.value=false
                 }
         }
@@ -151,7 +149,7 @@ class RegisterViewModel : ViewModel(){
 
         storageReference.putFile(imageUri)
             .addOnCompleteListener{
-                Log.d(tag,"IMAGE UPLOAD HERE -> ${it.isSuccessful}")
+                Log.d("proba","IMAGE UPLOAD HERE -> ${it.isSuccessful}")
                 if(it.isSuccessful){
                     _imageUri.value = null
                     isLoading.value = false
@@ -159,8 +157,8 @@ class RegisterViewModel : ViewModel(){
                 }
             }
             .addOnFailureListener{
-                Log.d(tag,"IMAGE NOT UPLOADED")
-                Log.d(tag,"${it.message}")
+                Log.d("proba","IMAGE NOT UPLOADED")
+                Log.d("proba","${it.message}")
                 isLoading.value=false
             }
     }

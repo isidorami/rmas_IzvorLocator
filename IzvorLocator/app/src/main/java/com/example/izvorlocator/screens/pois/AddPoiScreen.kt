@@ -12,11 +12,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.izvorlocator.R
 import com.example.izvorlocator.app.AppRouter
@@ -25,8 +28,10 @@ import com.example.izvorlocator.data.pois.EditViewModel
 import com.example.izvorlocator.data.pois.PoiViewModel
 import com.example.izvorlocator.data.user.UserViewModel
 import com.example.izvorlocator.ui.theme.Background
+import com.example.izvorlocator.ui.theme.Primary
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import java.io.File
 
 @SuppressLint("DefaultLocale")
 @Composable
@@ -52,8 +57,29 @@ fun AddPoiScreen(poiViewModel: PoiViewModel,
         ActivityResultContracts.GetMultipleContents()
     ) { uris: List<Uri> ->
         editViewModel.onImagesPicked(uris)
+        Log.d("proba", "stanje editViewModel -- ${editViewModel.slike}")
     }
     val imageUris = editViewModel.slike
+
+    var isShowingPickerDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    var currentTempImageUri by remember { mutableStateOf<Uri?>(null) } // Use a mutable state to hold the current URI
+
+    val takePictureLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success: Boolean ->
+        if (success) {
+            Log.d("proba", "Uspesno slikano! -- ${currentTempImageUri.toString()}")
+            editViewModel.onImagesPicked(listOf(currentTempImageUri!!))
+        }
+    }
+    fun launchCamera() {
+        val timestamp = System.currentTimeMillis()
+        val tempFile = File.createTempFile("temp_image_$timestamp", ".jpg", context.cacheDir).apply { deleteOnExit() }
+        currentTempImageUri = FileProvider.getUriForFile(context, "${context.packageName}.provider", tempFile)
+
+        takePictureLauncher.launch(currentTempImageUri!!)
+    }
+
     val focusManager = LocalFocusManager.current
     Column(
         modifier = Modifier
@@ -75,11 +101,9 @@ fun AddPoiScreen(poiViewModel: PoiViewModel,
             ){
             ImageSwitcher(imageUris = imageUris)
             Spacer(modifier = Modifier.height(8.dp))
-            SizedButtonComponent(
-                value = "Odaberi slike",
-                onButtonClicked = { multipleImagePickerLauncher.launch("image/*") },
-                width = 150.dp
-            )
+            SizedButtonComponent(value = "Odaberi slike",
+                onButtonClicked = { isShowingPickerDialog = true },
+                width = 150.dp)
         }
         Spacer(modifier = Modifier.height(8.dp))
         Row{
@@ -141,14 +165,15 @@ fun AddPoiScreen(poiViewModel: PoiViewModel,
             onTextChanged = {editViewModel.pristupacnost = it
                 editViewModel.pristupacnostError = (it.length<3) },
             isError = editViewModel.pristupacnostError,
-            value = editViewModel.pristupacnost)
+            value = editViewModel.pristupacnost
+        )
         Spacer(modifier = Modifier.height(8.dp))
-            ButtonComponent(
-                value = stringResource(R.string.dodaj_marker),
-                onButtonClicked = {
-                    if(editViewModel.pristupacnost.isNotEmpty() && imageUris.isNotEmpty()) {
-                        Log.d("proba", "snima se novi poi")
-                        poiViewModel.addPoi(
+        ButtonComponent(
+            value = stringResource(R.string.dodaj_marker),
+            onButtonClicked = {
+                if(editViewModel.pristupacnost.isNotEmpty() && imageUris.isNotEmpty()) {
+                    Log.d("proba", "snima se novi poi")
+                    poiViewModel.addPoi(
                             pristupacnost = editViewModel.pristupacnost,
                             vrsta = editViewModel.vrsta,
                             kvalitet = editViewModel.kvalitet,
@@ -157,12 +182,51 @@ fun AddPoiScreen(poiViewModel: PoiViewModel,
                             korisnikImePrezime = userNameSurname,
                             lat = editViewModel.lat,
                             lng = editViewModel.lng
+                    )
+                    UserViewModel.addPointsToUser(30)
+                    editViewModel.reset()
+                    AppRouter.popBackStack()
+                }},
+            isEnabled = true)
+    }
+    if(isShowingPickerDialog) {
+        androidx.compose.material.AlertDialog(
+            onDismissRequest = { isShowingPickerDialog = false },
+            title = {
+                androidx.compose.material.Text(
+                    text = "Odaberi slike",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+            },
+            buttons = {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    androidx.compose.material.TextButton(
+                        onClick = {
+                            multipleImagePickerLauncher.launch("image/*")
+                            isShowingPickerDialog = false
+                        },
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    ) {
+                        androidx.compose.material.Text(
+                            "Otvori galeriju",
+                            color = Primary
                         )
-                        UserViewModel.addPointsToUser(30)
-                        editViewModel.reset()
-                        AppRouter.popBackStack()
                     }
-                },
-                isEnabled = true)
+                    androidx.compose.material.TextButton(onClick = {
+                        launchCamera()
+                        isShowingPickerDialog = false
+                    }) {
+                        androidx.compose.material.Text(
+                            "Otvori kameru",
+                            color = Primary
+                        )
+                    }
+                }
+            }
+        )
     }
 }

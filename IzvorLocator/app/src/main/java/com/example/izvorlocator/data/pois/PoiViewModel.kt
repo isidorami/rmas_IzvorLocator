@@ -22,7 +22,6 @@ class PoiViewModel(private val storageService: StorageService): ViewModel() {
     var selectedPoi: Poi by mutableStateOf(Poi())
         private set
     var selectedPoiImages: List<Uri> by mutableStateOf(emptyList())
-        private set
 
     fun setCurrentPoi(poi: Poi) {
         selectedPoi = poi
@@ -95,9 +94,34 @@ class PoiViewModel(private val storageService: StorageService): ViewModel() {
     fun deletePoi(id: String) {
         viewModelScope.launch {
             storageService.delete(id)
-            /*TODO: BRISANJE SLIKA*/
+            deleteImagesFromFirebase(id)
         }
     }
+
+    private fun deleteImagesFromFirebase(poiId: String) {
+        val storageReference = FirebaseStorage.getInstance().getReference("Pois/$poiId")
+
+        storageReference.listAll()
+            .addOnSuccessListener { result ->
+                val deleteTasks = result.items.map { fileReference ->
+                    fileReference.delete()
+                        .addOnSuccessListener {
+                            Log.d("proba", "Deleted image: ${fileReference.name}")
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.d("proba", "Failed to delete ${fileReference.name}: ${exception.message}")
+                        }
+                }
+
+                Tasks.whenAllSuccess<Void>(deleteTasks).addOnCompleteListener {
+                    Log.d("proba", "Successfully deleted all images for POI: $poiId")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("proba", "Failed to list files for deletion: ${exception.message}")
+            }
+    }
+
 
     fun editPoi(pristupacnost: String, vrsta: String, kvalitet: String, slike: List<Uri>) {
         viewModelScope.launch {

@@ -268,7 +268,7 @@ fun SizedButtonComponent(
         list = listOf(Color.Red,Color(0xFFFF6F6F))
     }
     Button(onClick = {
-        onButtonClicked.invoke()
+        onButtonClicked()
     },
         modifier = Modifier
             .heightIn(48.dp)

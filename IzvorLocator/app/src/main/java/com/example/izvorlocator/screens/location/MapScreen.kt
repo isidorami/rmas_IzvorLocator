@@ -44,6 +44,7 @@ import com.example.izvorlocator.data.filter.FilterUIEvent
 import com.example.izvorlocator.data.filter.FilterViewModel
 import com.example.izvorlocator.data.location.LocationTracker
 import com.example.izvorlocator.data.pois.Poi
+import com.example.izvorlocator.data.user.UserViewModel
 import com.example.izvorlocator.ui.theme.Background
 import com.example.izvorlocator.ui.theme.Primary
 import com.google.android.gms.maps.model.*
@@ -84,6 +85,11 @@ fun MapScreen(
 
     // Lokacije sa primenjenim filterima
     var filteredLocations by remember { mutableStateOf(list) }
+
+    LaunchedEffect(list) {
+        // Reset filteredLocations when the list changes or when entering the screen
+        filteredLocations = list
+    }
 
     BottomSheetScaffold(
         scaffoldState = scaffoldState,

@@ -61,25 +61,58 @@ class UserViewModel : ViewModel(){
         val currentUser = firebaseAuth.currentUser
 
         currentUser?.let { user ->
-            user.delete()
-                .addOnCompleteListener { deleteTask ->
-                    if (deleteTask.isSuccessful) {
-                        Log.d("proba", "User account deleted.")
-                        isLoading.value = false
-                        clearUserData()
-                        LocationTracker.updateServiceState(false)
+            deleteProfilePhoto(user.uid) {
+                deleteUserFromDatabase(user.uid) {
+                    user.delete()
+                        .addOnCompleteListener { deleteTask ->
+                            Log.d("proba", "delete task = $deleteTask")
+                            if (deleteTask.isSuccessful) {
+                                Log.d("proba", "User account deleted.")
+                                isLoading.value = false
+                                clearUserData()
+                                LocationTracker.updateServiceState(false)
 
-                        AppRouter.navigateTo(Screen.RegisterScreen)
-                    } else {
-                        Log.e("proba", "Account deletion failed.")
-                        isLoading.value = false
-                    }
+                                AppRouter.navigateTo(Screen.RegisterScreen)
+                            } else {
+                                Log.e("proba", "Account deletion failed.")
+                                isLoading.value = false
+                            }
+                        }
                 }
+            }
         } ?: run {
             Log.e("proba", "No user is currently signed in.")
             isLoading.value = false
         }
     }
+
+    private fun deleteProfilePhoto(uid: String, onComplete: () -> Unit) {
+        val storageReference = FirebaseStorage.getInstance().reference.child("Users/$uid")
+
+        storageReference.delete()
+            .addOnSuccessListener {
+                Log.d("proba", "Profile photo deleted successfully.")
+                onComplete()
+            }
+            .addOnFailureListener { exception ->
+                Log.e("proba", "Failed to delete profile photo: ${exception.message}")
+                onComplete()
+            }
+    }
+    private fun deleteUserFromDatabase(uid: String, onComplete: () -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(uid)
+
+        databaseReference.removeValue()
+            .addOnSuccessListener {
+                Log.d("UserViewModel", "User deleted from database successfully.")
+                onComplete()
+            }
+            .addOnFailureListener { exception ->
+                Log.e("UserViewModel", "Failed to delete user from database: ${exception.message}")
+                onComplete()
+            }
+    }
+
 
     fun fetchUser(){
         isLoading.value = true
@@ -115,12 +148,12 @@ class UserViewModel : ViewModel(){
 
         storageReference.downloadUrl
             .addOnSuccessListener { uri ->
-                Log.d("UserViewModel", "FETCH PHOTO SUCCESS")
+                Log.d("proba", "FETCH PHOTO SUCCESS")
                 onPhotoFetched(uri)
             }
             .addOnFailureListener {
-                Log.d("UserViewModel", "FETCH PHOTO FAILURE")
-                onPhotoFetched(null) // If there's no photo, return null
+                Log.d("proba", "FETCH PHOTO FAILURE")
+                onPhotoFetched(null)
             }
     }
 

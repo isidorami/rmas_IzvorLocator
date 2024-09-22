@@ -15,8 +15,6 @@ import com.example.izvorlocator.data.validation.Validator
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginViewModel: ViewModel() {
-    private var tag = LoginViewModel::class.simpleName
-
     var loginUIState = mutableStateOf(LoginUIState())
 
     var allValidationsPassed = mutableStateOf(false)
@@ -64,8 +62,8 @@ class LoginViewModel: ViewModel() {
         FirebaseAuth.getInstance()
             .signInWithEmailAndPassword(email, password)
             .addOnCompleteListener{
-                Log.d(tag,"IN COMPLETE LISTENER")
-                Log.d(tag,"${it.isSuccessful}")
+                Log.d("proba","LOGIN -- IN COMPLETE LISTENER")
+                Log.d("proba","${it.isSuccessful}")
                 if(it.isSuccessful){
                     isLoading.value = false
                     AppRouter.navigateTo(Screen.MapScreen)
@@ -73,8 +71,8 @@ class LoginViewModel: ViewModel() {
             }
             .addOnFailureListener{
                 isLoading.value = false
-                Log.d(tag,"IN FAILURE LISTENER")
-                Log.d(tag,"${it.message}")
+                Log.d("proba","LOGIN -- IN FAILURE LISTENER")
+                Log.d("proba","${it.message}")
             }
     }
     private fun validateAll(): Boolean {

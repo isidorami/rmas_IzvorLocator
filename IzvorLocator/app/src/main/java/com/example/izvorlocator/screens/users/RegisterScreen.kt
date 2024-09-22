@@ -1,6 +1,8 @@
 package com.example.izvorlocator.screens.users
 
 import android.net.Uri
+import android.util.Log
+import android.widget.Button
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -45,17 +47,49 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.FileProvider
 import coil.compose.rememberImagePainter
 import com.example.izvorlocator.components.CustomIndeterminateProgress
 import com.example.izvorlocator.components.SizedButtonComponent
+import java.io.File
+//noinspection UsingMaterialAndMaterial3Libraries
+import androidx.compose.material.AlertDialog
+//noinspection UsingMaterialAndMaterial3Libraries
+import androidx.compose.material.Text
+//noinspection UsingMaterialAndMaterial3Libraries
+import androidx.compose.material.TextButton
+import androidx.compose.material3.Button
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import com.example.izvorlocator.ui.theme.Primary
 
 @Composable
 fun RegisterScreen(registerViewModel: RegisterViewModel = viewModel()) {
     val imagePickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let { registerViewModel.onImagePicked(it) }
+        Log.d("proba", "uspesno odabrano!!!! ${uri.toString()}")
     }
     val imageUri = registerViewModel.imageUri.value
     val isLoading by remember { registerViewModel.isLoading }
+    var isShowingPickerDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    // privremeno se cuva slika napravljena kamerom
+    val tempImageUri = remember {
+        val timestamp = System.currentTimeMillis()
+        val tempFile = File.createTempFile("temp_image_$timestamp}", ".jpg", context.cacheDir).apply { deleteOnExit() }
+        FileProvider.getUriForFile(context, "${context.packageName}.provider", tempFile)
+    }
+    val takePictureLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success: Boolean ->
+        if (success) {
+            Log.d("proba", "uspesno slikano! -- ${tempImageUri.toString()}")
+            registerViewModel.onImagePicked(tempImageUri)
+        }
+    }
 
     Surface(
             modifier = Modifier
@@ -86,11 +120,9 @@ fun RegisterScreen(registerViewModel: RegisterViewModel = viewModel()) {
                                 .clip(CircleShape)
                         )
                         Spacer(modifier = Modifier.width(40.dp))
-                        SizedButtonComponent(
-                            value = "Odaberi sliku",
-                            onButtonClicked = { imagePickerLauncher.launch("image/*") },
-                            width = 150.dp
-                        )
+                        SizedButtonComponent(value = "Odaberi sliku",
+                            onButtonClicked = { isShowingPickerDialog = true },
+                            width = 150.dp)
                     }
                 }
                 TextFieldComponent(
@@ -149,6 +181,40 @@ fun RegisterScreen(registerViewModel: RegisterViewModel = viewModel()) {
         }
     if(isLoading) {
         CustomIndeterminateProgress(modifier = Modifier)
+    }
+    if(isShowingPickerDialog) {
+        AlertDialog(
+            onDismissRequest = { isShowingPickerDialog = false },
+            title = {
+                Text(
+                    text = "Odaberi sliku",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+            },
+            buttons = {
+                Column (
+                    modifier = Modifier.padding(16.dp)
+                ){
+                    TextButton(onClick = {
+                        imagePickerLauncher.launch("image/*")
+                        isShowingPickerDialog = false },
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    ) {
+                        Text("Otvori galeriju",
+                            color = Primary)
+                    }
+                    TextButton(onClick = {
+                        takePictureLauncher.launch(tempImageUri)
+                        isShowingPickerDialog = false
+                    }) {
+                        Text("Otvori kameru",
+                            color = Primary)
+                    }
+                }
+            }
+        )
     }
 }
 
