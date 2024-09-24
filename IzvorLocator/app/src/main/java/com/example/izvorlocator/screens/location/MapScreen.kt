@@ -369,7 +369,7 @@ fun MapScreen(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState,
             ) {
-                Log.d("proba", "unutar gmaps locations = ${filteredLocations.toString()}")
+                //Log.d("proba", "unutar gmaps locations = ${filteredLocations.toString()}")
 
                 // Postavi markere za filtrirane lokacije
                     filteredLocations.forEach { poi ->

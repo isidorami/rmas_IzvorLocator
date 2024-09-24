@@ -187,6 +187,6 @@ class LocationService: Service() {
     companion object {
         const val ACTION_START = "ACTION_START"
         const val ACTION_STOP = "ACTION_STOP"
-        const val PROXIMITY_THRESHOLD = 20f // 20 metara
+        const val PROXIMITY_THRESHOLD = 50f // 20 metara
     }
 }
