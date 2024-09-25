@@ -101,7 +101,7 @@ class LocationService: Service() {
                         val distance = calculateDistance(lat, lng, marker.lat, marker.lng)
                         if (distance < PROXIMITY_THRESHOLD) {
                             sendProximityNotification(marker)
-                            if(distance==0f){
+                            if(distance<5f){
                                 val uid = FirebaseAuth.getInstance().currentUser?.uid.toString()
                                 visitPoi(marker.id, uid)
                             }
@@ -149,12 +149,12 @@ class LocationService: Service() {
         val p : Poi? = storageService.getPoi(id)
         if(p!=null){
             if(p.korisnikId==visitor || p.visitors.contains(visitor)){
-                //Log.d("proba", "Korisnik kreirao ili vec obisao lokaciju!")
+                Log.d("proba", "Korisnik kreirao ili vec obisao lokaciju!")
                 return
             }
             else {
                 val totalVisitors = p.visitors + visitor
-                Log.d("proba", "Dodali visitora: $totalVisitors")
+                Log.d("proba", "Korisnik obilazi lokaciju!")
                 val p2 = Poi(
                     id = p.id,
                     pristupacnost = p.pristupacnost,
@@ -187,6 +187,6 @@ class LocationService: Service() {
     companion object {
         const val ACTION_START = "ACTION_START"
         const val ACTION_STOP = "ACTION_STOP"
-        const val PROXIMITY_THRESHOLD = 50f // 20 metara
+        const val PROXIMITY_THRESHOLD = 50f // 50 metara
     }
 }
